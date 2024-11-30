@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.11.30 II
+// Version: 24.11.30 III
 // End License
 #pragma once
 #include <JCR6_Core.hpp>
@@ -41,7 +41,10 @@ namespace Slyvina {
 		inline TQSG::TImageFont GetFont(std::string Name) { return GetFont("Fonts/" + Name + ".jfbf", Name); }
 		inline TQSG::TImageFont FntSys() { return GetFont("System"); }
 		inline TQSG::TImageFont FntLiquid() { return GetFont("Liquid");}
+		inline TQSG::TImageFont FntRyanna() { return GetFont("Ryanna"); }
 
 		TQSG::TImage GetWijzer(bool groot);
+
+		void Slaan(int times);
 	}
 }

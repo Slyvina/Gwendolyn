@@ -22,13 +22,15 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.11.30 II
+// Version: 24.11.30 III
 // End License
 #include "Gwen_Assets.hpp"
 #include <SlyvStream.hpp>
 #include <SlyvQCol.hpp>
 #include <SlyvGINIE.hpp>
 #include "Gwen_GUI.hpp"
+#include <TQSA.hpp>
+using namespace Slyvina::TQSA;
 using namespace Slyvina::TQSG;
 
 #define WIJZER_HOT_X 3
@@ -104,6 +106,14 @@ namespace Slyvina {
 			auto ret{ LoadImage(Res(), groot ? "GFX/Grote Wijzer.png" : "GFX/Kleine Wijzer.png") };
 			ret->Hot(WIJZER_HOT_X, WIJZER_HOT_Y);
 			return ret;
+		}
+
+		void Slaan(int times) {
+			if (Res()->EntryExists("Audio/Pixabay_Bell.mp3")) {
+				static auto Bell{ LoadAudio(Res(),"Audio/Pixabay_Bell.mp3") };
+				if (times <= 0) times = 12;
+				Bell->ChPlay(0, times);
+			}
 		}
 
 	}
