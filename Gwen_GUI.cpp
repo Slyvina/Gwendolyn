@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.11.30 II
+// Version: 24.11.30 IV
 // End License
 #include "Gwen_GUI.hpp"
 #include "Gwen_Assets.hpp"
@@ -30,9 +30,8 @@
 #include <TQSE.hpp>
 #include <SlyvRoman.hpp>
 #include <SlyvQCol.hpp>
-#include <june19_label.hpp>
-#include <june19_picture.hpp>
-#include <june19_button.hpp>
+#include <SlyvWindows.hpp>
+#include <june19.hpp>
 #include <SlyvTime.hpp>
 #include "Gwen_Config.hpp"
 
@@ -118,17 +117,49 @@ namespace Slyvina {
 			static String LastHour{ QTimeF("%H") }; 
 			if (LastHour != QTimeF("%H") && ConfigSlaan()) { Slaan(ToInt(QTimeF("%I"))); LastHour = QTimeF("%H"); }
 		}
+		static void ShowPhanClock(j19gadget* g, j19action) {
+			auto Mil{ Phan_TotalMillos() };
+			auto KDeg{ (Mil/20000.0) * 360 };
+			auto GDeg{ ((Mil%10000) / 1000.0) * 360 };
+			SetScale(3, 4);
+			SetColor(50, 36, 0); Rotate(KDeg); KleineWijzer->XDraw(g->X(), g->Y());
+			SetColor(255, 180, 0); Rotate(GDeg); GroteWijzer->XDraw(g->X(), g->Y());
+			Rotate(0);
+			SetScale(1, 1);
+			static int LastVecta{ Phan_Vectas() };		
+			int Vecta{ Phan_Vectas() };
+			if (LastVecta != Vecta && ConfigSlaan()) { Slaan(Vecta ? Vecta : 20); LastVecta = Vecta; }
+		}
+		
 		static void NormDigiTime(j19gadget* g, j19action) { g->Caption = CurrentTime(); }
+		static void PhanDigiTime(j19gadget* g, j19action) { g->Caption = TrSPrintF("%2d:%03d", Phan_Vectas(), Phan_Millos()); }
+		static void IsEarth(j19gadget* g, j19action) { NormClock->Visible = g->checked; }
+		static void IsPhan(j19gadget* g, j19action) { PhanClock->Visible = g->checked; }
+		static void SetClockType(j19gadget* g, j19action) { Config()->Value("Clock", "Type", g->Caption); }
+		static void SetTermRelease(j19gadget* g, j19action) { 
+			static auto before{ false };
+			Config()->Value("Windows", "TerminalRelease", uboolstring(g->checked)); 
+			if (!before) { Notify("Please note that this setting only takes effect during the start up of Gwendolyn!"); }
+			before = true;
+		}
+		static void SetBell(j19gadget* g, j19action) { Config()->Value("Bell", "Bell", uboolstring(g->checked)); }
 #pragma endregion
 
 
 #pragma region Main
 
 		void Gwen_Init() {
+#ifdef SlyvWindows
+			if (Upper(Config()->Value("Windows", "TerminalRelease")) == "TRUE") { 
+				QCol->Doing("Releasing", "Console");
+				ReleaseConsole(); 
+			}
+#endif
 			Graphics(WinW, WinH, "Gwendolyn - (c) Jeroen P. Broks"); Cls(); Flip();
 			j19gadget::SetDefaultFont(FntSys());
 			// Clock Panel
 			auto Clk{ NewPanel("Clock") };
+			// Normal Earth Clock
 			NormClock = CreateGroup(0, 0, Clk->W() / 2, Clk->W() / 2, Clk);
 			auto NormDigi{ CreateLabel(".",(NormClock->W() / 2) - (FntRyanna()->Width("00:00:00") / 2),(int)floor(NormClock->H() * .65),FntRyanna()->Width("00:00:00") ,FntRyanna()->Height("00:00:00"),NormClock) };
 			NormDigi->SetForeground(0, 255, 255, 255);
@@ -145,6 +176,44 @@ namespace Slyvina {
 			GroteWijzer = GetWijzer(true);
 			KleineWijzer = GetWijzer(false);
 			NormCenter->CBDraw = ShowClock;
+
+			// Phantasar Clock
+			PhanClock = CreateGroup(0, 0, Clk->W() / 2, Clk->W() / 2, Clk);
+			auto PhanDigi{ CreateLabel(".",(PhanClock->W() / 2) - (FntRyanna()->Width("00:000") / 2),(int)floor(PhanClock->H() * .65),FntRyanna()->Width("00:000") ,FntRyanna()->Height("00:000"),PhanClock ) };
+			PhanDigi->SetForeground(0, 255, 255, 255);
+			PhanDigi->SetBackground(0, 0, 0, 255);
+			PhanDigi->CBDraw = PhanDigiTime;
+			PhanDigi->SetFont(FntRyanna());
+			for (auto vec = 1; vec <= 20; vec++) {
+				auto pos{ DegSpot(vec * 18,220) };
+				auto midden{ PhanClock->W() / 2 };
+				auto uurl{ CreateLabel(std::to_string(vec),pos.X + midden,pos.Y + midden,0,0,PhanClock,8)};
+				uurl->SetFont(FntLiquid());
+			}
+			auto PhanCenter = CreateGroup(PhanClock->W() / 2, PhanClock->W() / 2, 0, 0, PhanClock);
+			PhanCenter->CBDraw = ShowPhanClock;
+			// Select clock
+			auto ClkGroup{ CreateGroup(NormClock->W(),0,0,60,Clk) };
+			auto ClkEarth{ CreateRadioButton("Earth",0,0,0,0,ClkGroup,Config()->NewValue("Clock","Type","Earth") == "Earth") };
+			auto ClkPhantasar{ CreateRadioButton("Phantasar",0,16,0,0,ClkGroup,Config()->NewValue("Clock","Type","Earth") == "Phantasar") };
+			ClkEarth->SetForeground(255, 180, 0);
+			ClkEarth->CBDraw = IsEarth;
+			ClkEarth->CBAction = SetClockType;
+			ClkPhantasar->SetForeground(180, 255, 0);
+			ClkPhantasar->CBDraw = IsPhan;
+			ClkPhantasar->CBAction = SetClockType;
+			auto TermRelease{ CreateCheckBox("Release Terminal (Windows Only)",0,32,0,0,ClkGroup) };
+#ifdef SlyvWindows
+			TermRelease->SetForeground(180, 0, 255, 255);
+			TermRelease->CBAction = SetTermRelease;
+			TermRelease->checked = Upper(Config()->Value("Windows", "TerminalRelease")) == "TRUE";
+#else
+			TermRelease->Enabled = false;
+#endif
+			auto Bell{ CreateCheckBox("Bell",0,48,0,0,ClkGroup) };
+			Bell->checked = ConfigSlaan();
+			Bell->CBAction = SetBell;
+			Bell->SetForeground(0, 180, 255, 255);
 		}
 		void Gwen_Run() {
 			while (true) {
