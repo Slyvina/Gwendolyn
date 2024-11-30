@@ -22,6 +22,15 @@
     <Filter Include="Source Files\JCR6">
       <UniqueIdentifier>{3594cf5c-a339-4eda-8137-232870c64933}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\TQSL">
+      <UniqueIdentifier>{2909cc60-8421-4516-8e40-1e64a33512c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TQSL\SDL2">
+      <UniqueIdentifier>{8b0404ee-7fa9-445c-9621-9d52a419ff75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\June19">
+      <UniqueIdentifier>{9b25d466-8370-47f1-9d5d-3d6d4b7d0de0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Gwendolyn.cpp">
@@ -78,6 +87,51 @@
     <ClCompile Include="..\..\Libs\JCR6\Source\JCR6_zlib.cpp">
       <Filter>Source Files\JCR6</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Libs\TQSL\Source\TQSA.cpp">
+      <Filter>Source Files\TQSL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libs\TQSL\Source\TQSE.cpp">
+      <Filter>Source Files\TQSL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libs\TQSL\Source\TQSG.cpp">
+      <Filter>Source Files\TQSL</Filter>
+    </ClCompile>
+    <ClCompile Include="Gwen_GUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libs\June19\src\june19_button.cpp">
+      <Filter>Source Files\June19</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libs\June19\src\june19_checkbox.cpp">
+      <Filter>Source Files\June19</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libs\June19\src\june19_core.cpp">
+      <Filter>Source Files\June19</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libs\June19\src\june19_label.cpp">
+      <Filter>Source Files\June19</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libs\June19\src\june19_listbox.cpp">
+      <Filter>Source Files\June19</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libs\June19\src\june19_picture.cpp">
+      <Filter>Source Files\June19</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libs\June19\src\june19_radio.cpp">
+      <Filter>Source Files\June19</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libs\June19\src\june19_scrollbar.cpp">
+      <Filter>Source Files\June19</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libs\June19\src\june19_tabber.cpp">
+      <Filter>Source Files\June19</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libs\June19\src\june19_textfield.cpp">
+      <Filter>Source Files\June19</Filter>
+    </ClCompile>
+    <ClCompile Include="Gwen_Clock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Gwen_Jalondi.lua">
@@ -86,9 +140,60 @@
     <None Include="Gwen_Jalondi.ps1">
       <Filter>Source Files\Script</Filter>
     </None>
+    <None Include="..\..\Libs\TQSL\SDL2\libjpeg-9.dll">
+      <Filter>Source Files\TQSL\SDL2</Filter>
+    </None>
+    <None Include="..\..\Libs\TQSL\SDL2\libmodplug-1.dll">
+      <Filter>Source Files\TQSL\SDL2</Filter>
+    </None>
+    <None Include="..\..\Libs\TQSL\SDL2\libmpg123-0.dll">
+      <Filter>Source Files\TQSL\SDL2</Filter>
+    </None>
+    <None Include="..\..\Libs\TQSL\SDL2\libogg-0.dll">
+      <Filter>Source Files\TQSL\SDL2</Filter>
+    </None>
+    <None Include="..\..\Libs\TQSL\SDL2\libopus-0.dll">
+      <Filter>Source Files\TQSL\SDL2</Filter>
+    </None>
+    <None Include="..\..\Libs\TQSL\SDL2\libopusfile-0.dll">
+      <Filter>Source Files\TQSL\SDL2</Filter>
+    </None>
+    <None Include="..\..\Libs\TQSL\SDL2\libpng16-16.dll">
+      <Filter>Source Files\TQSL\SDL2</Filter>
+    </None>
+    <None Include="..\..\Libs\TQSL\SDL2\libtiff-5.dll">
+      <Filter>Source Files\TQSL\SDL2</Filter>
+    </None>
+    <None Include="..\..\Libs\TQSL\SDL2\libvorbis-0.dll">
+      <Filter>Source Files\TQSL\SDL2</Filter>
+    </None>
+    <None Include="..\..\Libs\TQSL\SDL2\libvorbisfile-3.dll">
+      <Filter>Source Files\TQSL\SDL2</Filter>
+    </None>
+    <None Include="..\..\Libs\TQSL\SDL2\libwebp-7.dll">
+      <Filter>Source Files\TQSL\SDL2</Filter>
+    </None>
+    <None Include="..\..\Libs\TQSL\SDL2\SDL2.dll">
+      <Filter>Source Files\TQSL\SDL2</Filter>
+    </None>
+    <None Include="..\..\Libs\TQSL\SDL2\SDL2_image.dll">
+      <Filter>Source Files\TQSL\SDL2</Filter>
+    </None>
+    <None Include="..\..\Libs\TQSL\SDL2\SDL2_mixer.dll">
+      <Filter>Source Files\TQSL\SDL2</Filter>
+    </None>
+    <None Include="..\..\Libs\TQSL\SDL2\zlib1.dll">
+      <Filter>Source Files\TQSL\SDL2</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Gwen_Assets.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Gwen_GUI.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Gwen_Clock.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -96,5 +201,25 @@
     <Library Include="..\..\Libs\JCR6\3rdParty\zlib\zlibstatic.lib">
       <Filter>Source Files\JCR6</Filter>
     </Library>
+    <Library Include="..\..\Libs\TQSL\SDL2\SDL2.lib">
+      <Filter>Source Files\TQSL\SDL2</Filter>
+    </Library>
+    <Library Include="..\..\Libs\TQSL\SDL2\SDL2_image.lib">
+      <Filter>Source Files\TQSL\SDL2</Filter>
+    </Library>
+    <Library Include="..\..\Libs\TQSL\SDL2\SDL2_mixer.lib">
+      <Filter>Source Files\TQSL\SDL2</Filter>
+    </Library>
+    <Library Include="..\..\Libs\TQSL\SDL2\SDL2main.lib">
+      <Filter>Source Files\TQSL\SDL2</Filter>
+    </Library>
+    <Library Include="..\..\Libs\TQSL\SDL2\SDL2test.lib">
+      <Filter>Source Files\TQSL\SDL2</Filter>
+    </Library>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="..\..\Libs\TQSL\SDL2\libFLAC-8.dll">
+      <Filter>Source Files\TQSL\SDL2</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

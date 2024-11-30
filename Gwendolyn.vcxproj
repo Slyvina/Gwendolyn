@@ -75,7 +75,7 @@
     <OutDir>$(SolutionDir)Exe\Windows\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);E:\Projects\Applications\Slyvina\Libs\TQSL;E:\Projects\Applications\Slyvina\Libs\June19\head;E:\Projects\Applications\Slyvina\Libs\JCR6\Headers;E:\Projects\Applications\Slyvina\Libs\Units\Headers;$(IncludePath)</IncludePath>
+    <IncludePath>E:\Projects\Applications\Slyvina\Libs\TQSL\SDL2\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);E:\Projects\Applications\Slyvina\Libs\TQSL\Headers;E:\Projects\Applications\Slyvina\Libs\TQSL;E:\Projects\Applications\Slyvina\Libs\June19\head;E:\Projects\Applications\Slyvina\Libs\JCR6\Headers;E:\Projects\Applications\Slyvina\Libs\Units\Headers;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)Exe\Windows\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -140,6 +140,19 @@
   <ItemGroup>
     <ClCompile Include="..\..\Libs\JCR6\Source\JCR6_Core.cpp" />
     <ClCompile Include="..\..\Libs\JCR6\Source\JCR6_zlib.cpp" />
+    <ClCompile Include="..\..\Libs\June19\src\june19_button.cpp" />
+    <ClCompile Include="..\..\Libs\June19\src\june19_checkbox.cpp" />
+    <ClCompile Include="..\..\Libs\June19\src\june19_core.cpp" />
+    <ClCompile Include="..\..\Libs\June19\src\june19_label.cpp" />
+    <ClCompile Include="..\..\Libs\June19\src\june19_listbox.cpp" />
+    <ClCompile Include="..\..\Libs\June19\src\june19_picture.cpp" />
+    <ClCompile Include="..\..\Libs\June19\src\june19_radio.cpp" />
+    <ClCompile Include="..\..\Libs\June19\src\june19_scrollbar.cpp" />
+    <ClCompile Include="..\..\Libs\June19\src\june19_tabber.cpp" />
+    <ClCompile Include="..\..\Libs\June19\src\june19_textfield.cpp" />
+    <ClCompile Include="..\..\Libs\TQSL\Source\TQSA.cpp" />
+    <ClCompile Include="..\..\Libs\TQSL\Source\TQSE.cpp" />
+    <ClCompile Include="..\..\Libs\TQSL\Source\TQSG.cpp" />
     <ClCompile Include="..\..\Libs\Units\Source\SlyvBank.cpp" />
     <ClCompile Include="..\..\Libs\Units\Source\SlyvDir.cpp" />
     <ClCompile Include="..\..\Libs\Units\Source\SlyvDirry.cpp" />
@@ -156,16 +169,73 @@
     <ClCompile Include="..\..\Libs\Units\Source\SlyvWindows.cpp" />
     <ClCompile Include="Gwendolyn.cpp" />
     <ClCompile Include="Gwen_Assets.cpp" />
+    <ClCompile Include="Gwen_Clock.cpp" />
+    <ClCompile Include="Gwen_GUI.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <CopyFileToFolders Include="..\..\Libs\TQSL\SDL2\libFLAC-8.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\..\Libs\TQSL\SDL2\libjpeg-9.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\..\Libs\TQSL\SDL2\libmodplug-1.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\..\Libs\TQSL\SDL2\libmpg123-0.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\..\Libs\TQSL\SDL2\libogg-0.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\..\Libs\TQSL\SDL2\libopus-0.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\..\Libs\TQSL\SDL2\libopusfile-0.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\..\Libs\TQSL\SDL2\libpng16-16.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\..\Libs\TQSL\SDL2\libtiff-5.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\..\Libs\TQSL\SDL2\libvorbis-0.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\..\Libs\TQSL\SDL2\libvorbisfile-3.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\..\Libs\TQSL\SDL2\libwebp-7.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\..\Libs\TQSL\SDL2\SDL2.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\..\Libs\TQSL\SDL2\SDL2_image.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\..\Libs\TQSL\SDL2\SDL2_mixer.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\..\Libs\TQSL\SDL2\zlib1.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
     <None Include="Gwen_Jalondi.lua" />
     <None Include="Gwen_Jalondi.ps1" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Gwen_Assets.hpp" />
+    <ClInclude Include="Gwen_Clock.hpp" />
+    <ClInclude Include="Gwen_GUI.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\Libs\JCR6\3rdParty\zlib\zlibstatic.lib" />
+    <Library Include="..\..\Libs\TQSL\SDL2\SDL2.lib" />
+    <Library Include="..\..\Libs\TQSL\SDL2\SDL2main.lib" />
+    <Library Include="..\..\Libs\TQSL\SDL2\SDL2test.lib" />
+    <Library Include="..\..\Libs\TQSL\SDL2\SDL2_image.lib" />
+    <Library Include="..\..\Libs\TQSL\SDL2\SDL2_mixer.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
