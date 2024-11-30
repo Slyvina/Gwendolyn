@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.11.30
+// Version: 24.11.30 I
 // End License
 #include <SlyvTime.hpp>
 #include "Gwen_Clock.hpp"
@@ -38,23 +38,37 @@ namespace Slyvina {
 				H{ ToInt(QTimeF("%H")) },
 				M{ ToInt(QTimeF("%M")) },
 				S{ ToInt(QTimeF("%S")) };
-			return 60 + (M * 60) + (H * 60 * 60);
+			return S + (M * 60) + (H * 60 * 60);
 		}
 		int TotSec12() {
 			auto
 				H{ ToInt(QTimeF("%I")) },
 				M{ ToInt(QTimeF("%M")) },
 				S{ ToInt(QTimeF("%S")) };
-			return 60 + (M * 60) + (H * 60 * 60);
+			return S + (M * 60) + (H * 60 * 60);
 		}
 		int TotSec() {
-			auto				
+			auto
 				M{ ToInt(QTimeF("%M")) },
 				S{ ToInt(QTimeF("%S")) };
-			return 60 + (M * 60);
+			return S + (M * 60);
 		}
 
 		int Sec() { return ToInt(QTimeF("%S")); }
+
+		int Phan_TotalMillos() {
+			return (int)floor(
+				(TotSec24() / 86400.0)
+				* 20000);
+		}
+
+		int Phan_Vectas() {
+			return Phan_TotalMillos() / 1000;
+		}
+
+		int Phan_Millos() {
+			return Phan_TotalMillos() % 1000;;
+		}
 
 	}
 
