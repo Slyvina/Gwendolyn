@@ -2,3 +2,5 @@ MKL_*
 .vs
 Exe
 x64
+*.user
+
