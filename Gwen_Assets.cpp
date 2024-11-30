@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.11.30 III
+// Version: 24.11.30 IV
 // End License
 #include "Gwen_Assets.hpp"
 #include <SlyvStream.hpp>
@@ -112,7 +112,7 @@ namespace Slyvina {
 			if (Res()->EntryExists("Audio/Pixabay_Bell.mp3")) {
 				static auto Bell{ LoadAudio(Res(),"Audio/Pixabay_Bell.mp3") };
 				if (times <= 0) times = 12;
-				Bell->ChPlay(0, times);
+				Bell->ChPlay(0, times-1);
 			}
 		}
 
