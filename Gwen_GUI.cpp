@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.11.30 I
+// Version: 24.11.30 II
 // End License
 #include "Gwen_GUI.hpp"
 #include "Gwen_Assets.hpp"
@@ -33,6 +33,8 @@
 #include <june19_label.hpp>
 #include <june19_picture.hpp>
 #include <june19_button.hpp>
+#include <SlyvTime.hpp>
+#include "Gwen_Config.hpp"
 
 
 using namespace Slyvina;
@@ -113,7 +115,10 @@ namespace Slyvina {
 			SetColor(255, 180, 0); Rotate(GDeg); GroteWijzer->XDraw(g->X(), g->Y());
 			Rotate(0);
 			SetScale(1, 1);
+			static String LastHour{ QTimeF("%H") }; 
+			if (LastHour != QTimeF("%H") && ConfigSlaan()) { Slaan(ToInt(QTimeF("%I"))); LastHour = QTimeF("%H"); }
 		}
+		static void NormDigiTime(j19gadget* g, j19action) { g->Caption = CurrentTime(); }
 #pragma endregion
 
 
@@ -125,10 +130,15 @@ namespace Slyvina {
 			// Clock Panel
 			auto Clk{ NewPanel("Clock") };
 			NormClock = CreateGroup(0, 0, Clk->W() / 2, Clk->W() / 2, Clk);
+			auto NormDigi{ CreateLabel(".",(NormClock->W() / 2) - (FntRyanna()->Width("00:00:00") / 2),(int)floor(NormClock->H() * .65),FntRyanna()->Width("00:00:00") ,FntRyanna()->Height("00:00:00"),NormClock) };
+			NormDigi->SetForeground(0, 255, 255, 255);
+			NormDigi->SetBackground(0, 0, 0, 255);
+			NormDigi->CBDraw = NormDigiTime;
+			NormDigi->SetFont(FntRyanna());
 			for (auto uur = 1; uur <= 12; uur++) {
 				auto pos{ DegSpot((uur % 12) * 30,200) };
 				auto midden{ NormClock->W() / 2 };
-				auto uurl{ CreateLabel(ToRoman(uur),pos.X+midden,pos.Y+midden,0,0,NormClock,2) };
+				auto uurl{ CreateLabel(ToRoman(uur),pos.X+midden,pos.Y+midden,0,0,NormClock,8) };
 				uurl->SetFont(FntLiquid());				 
 			}
 			NormCenter = CreateGroup(NormClock->W() / 2, NormClock->W() / 2, 0, 0, NormClock);
