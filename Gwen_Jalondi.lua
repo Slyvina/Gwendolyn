@@ -22,8 +22,10 @@
 -- 	Please note that some references to data like pictures or audio, do not automatically
 -- 	fall under this licenses. Mostly this is noted in the respective files.
 -- 
--- Version: 24.11.30
+-- Version: 24.11.30 I
 -- End License
+SDL2Dir = "../../Libs/TQSL/SDL2/"
+
 Jalondi.AddString(sprintf([[
 # ID data
 # (c) Jeroen P. Broks - GPL3
@@ -34,4 +36,11 @@ Updated=%s
 ]],os.date()),"ID/Identify.ini","Store","Jeroen P. Broks","GPL3")
 
 Jalondi.Add("Assets","","zlib")
+Jalondi.Add("../../../../Fonts/DosFont/DosFont.jfbf","Fonts/System.jfbf","zlib","","","System Font") -- Normally I would recommend AGAINST solid blocks for jfbf fonts.
+
+SDL_Licenses = {"FLAC.txt", "modplug.txt", "mpg123.txt","ogg-vorbis.txt","opus.txt","opusfile.txt"}
+for _,SDLL in pairs(SDL_Licenses) do
+	Jalondi.Add(sprintf("%sLICENSE.%s",SDL2Dir,SDLL),sprintf("Licenses/SDL2/%s",SDLL),"zlib","See file content","License","License_SDL2")
+end
+
 Jalondi.Start("Exe/Windows/Gwendolyn.jcr")
