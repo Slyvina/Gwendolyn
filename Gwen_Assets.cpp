@@ -22,12 +22,18 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.11.30
+// Version: 24.11.30 II
 // End License
 #include "Gwen_Assets.hpp"
 #include <SlyvStream.hpp>
 #include <SlyvQCol.hpp>
 #include <SlyvGINIE.hpp>
+#include "Gwen_GUI.hpp"
+using namespace Slyvina::TQSG;
+
+#define WIJZER_HOT_X 3
+#define WIJZER_HOT_Y 42
+
 using namespace Slyvina::JCR6;
 using namespace Slyvina::Units;
 
@@ -36,6 +42,7 @@ namespace Slyvina {
 		static String _ResFile{ "" };
 		static JT_Dir _Res{ nullptr };
 		static GINIE _ResID{ nullptr };
+		static std::map<String, TQSG::TImageFont> _Font;
 
 		String ResFile(String A0) {
 			if (_ResFile.size()) return _ResFile;
@@ -80,6 +87,23 @@ namespace Slyvina {
 			_ResID = ParseGINIE(IDS);
 			if (_ResID->Value("ID", "Tool") != "Gwendolyn") { QCol->Error("Resource does not appear to be long to Gwendolyn"); exit(3); }
 			QCol->Doing("ResBuild", _ResID->Value("ID", "Updated"));
+		}
+
+		TQSG::TImageFont GetFont(std::string Name, std::string Tag) {
+			Trans2Upper(Tag);
+			if (!_Font.count(Tag)) {
+				QCol->Doing("Linking font", Name);
+				if (!Res()->DirectoryExists(Name)) { Gwen_Panic("Font not found"); return nullptr; }
+				_Font[Tag] = TQSG::LoadImageFont(Res(), Name);
+			}
+			return _Font[Tag];
+		}
+
+
+		TQSG::TImage GetWijzer(bool groot) {
+			auto ret{ LoadImage(Res(), groot ? "GFX/Grote Wijzer.png" : "GFX/Kleine Wijzer.png") };
+			ret->Hot(WIJZER_HOT_X, WIJZER_HOT_Y);
+			return ret;
 		}
 
 	}
