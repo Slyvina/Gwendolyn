@@ -132,6 +132,9 @@
     <ClCompile Include="Gwen_Clock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Gwen_Config.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Gwen_Jalondi.lua">
@@ -194,6 +197,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Gwen_Clock.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Gwen_Config.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

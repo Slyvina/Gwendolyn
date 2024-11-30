@@ -170,6 +170,7 @@
     <ClCompile Include="Gwendolyn.cpp" />
     <ClCompile Include="Gwen_Assets.cpp" />
     <ClCompile Include="Gwen_Clock.cpp" />
+    <ClCompile Include="Gwen_Config.cpp" />
     <ClCompile Include="Gwen_GUI.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -227,6 +228,7 @@
   <ItemGroup>
     <ClInclude Include="Gwen_Assets.hpp" />
     <ClInclude Include="Gwen_Clock.hpp" />
+    <ClInclude Include="Gwen_Config.hpp" />
     <ClInclude Include="Gwen_GUI.hpp" />
   </ItemGroup>
   <ItemGroup>
