@@ -172,6 +172,7 @@
     <ClCompile Include="Gwen_Clock.cpp" />
     <ClCompile Include="Gwen_Config.cpp" />
     <ClCompile Include="Gwen_GUI.cpp" />
+    <ClCompile Include="Gwen_Schedule.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="..\..\Libs\TQSL\SDL2\libFLAC-8.dll">
@@ -230,6 +231,7 @@
     <ClInclude Include="Gwen_Clock.hpp" />
     <ClInclude Include="Gwen_Config.hpp" />
     <ClInclude Include="Gwen_GUI.hpp" />
+    <ClInclude Include="Gwen_Schedule.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\Libs\JCR6\3rdParty\zlib\zlibstatic.lib" />
