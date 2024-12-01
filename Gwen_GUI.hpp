@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.11.30 I
+// Version: 24.12.01
 // End License
 #pragma once
 #include <june19_core.hpp>
@@ -30,6 +30,8 @@
 
 namespace Slyvina {
 	namespace Gwendolyn {
+		extern June19::j19gadget
+			* ListSchedule;
 
 #pragma region ClockSpot
 		struct ClockSpot { int X{ 0 }, Y{ 0 }; };

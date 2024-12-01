@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.01
+// Version: 24.12.01 I
 // End License
 #include "Gwen_GUI.hpp"
 #include "Gwen_Assets.hpp"
@@ -47,6 +47,9 @@ using namespace June19;
 
 namespace Slyvina {
 	namespace Gwendolyn {
+
+		j19gadget* 
+			ListSchedule{ nullptr };
 
 #pragma region ClockSpot
 		ClockSpot DegSpot(double deg,double straal) {						
@@ -236,7 +239,17 @@ namespace Slyvina {
 			auto SchBack{ CreateButton("Back",0,0,SchPanel) };
 			SchBack->CBDraw = DrwBack;
 			SchBack->CBAction = ActBack;
+			ListSchedule = CreateListBox(5, 5, 200, SchPanel->H() - 40, SchPanel);
+			ListSchedule->SetForeground(255, 180, 0);
+			ListSchedule->SetBackground(90, 0, 100);
 
+			// Countdown
+			auto CntPanel{ NewPanel("Countdown") };
+			auto CntBack{ CreateButton("Back",0,0,CntPanel) };
+			CntBack->CBDraw = DrwBack;
+			CntBack->CBAction = ActBack;
+
+			// Must be last!
 			GoToPanel("Clock");
 		}
 
