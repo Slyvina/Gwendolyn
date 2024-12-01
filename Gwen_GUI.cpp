@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.11.30 IV
+// Version: 24.12.01
 // End License
 #include "Gwen_GUI.hpp"
 #include "Gwen_Assets.hpp"
@@ -122,8 +122,8 @@ namespace Slyvina {
 			auto KDeg{ (Mil/20000.0) * 360 };
 			auto GDeg{ ((Mil%10000) / 1000.0) * 360 };
 			SetScale(3, 4);
-			SetColor(50, 36, 0); Rotate(KDeg); KleineWijzer->XDraw(g->X(), g->Y());
-			SetColor(255, 180, 0); Rotate(GDeg); GroteWijzer->XDraw(g->X(), g->Y());
+			SetColor(50, 36, 0); Rotate(360-KDeg); KleineWijzer->XDraw(g->X(), g->Y());
+			SetColor(255, 180, 0); Rotate(360-GDeg); GroteWijzer->XDraw(g->X(), g->Y());
 			Rotate(0);
 			SetScale(1, 1);
 			static int LastVecta{ Phan_Vectas() };		
@@ -143,6 +143,15 @@ namespace Slyvina {
 			before = true;
 		}
 		static void SetBell(j19gadget* g, j19action) { Config()->Value("Bell", "Bell", uboolstring(g->checked)); }
+		static void ActButton(j19gadget* g, j19action) { GoToPanel(g->Caption); }
+		static void ActBack(j19gadget*, j19action) { GoToPanel("Clock"); }
+		static void DrwBack(j19gadget* g, j19action) {
+			auto p{ g->GetParent() };
+			g->Y(p->Y() - g->H());
+			g->FG ? g->FG-- : g->FG;
+			g->FB = g->FG;
+			g->BR < 25 ? g->BR++ : g->BR;
+		}
 #pragma endregion
 
 
@@ -187,7 +196,7 @@ namespace Slyvina {
 			for (auto vec = 1; vec <= 20; vec++) {
 				auto pos{ DegSpot(vec * 18,220) };
 				auto midden{ PhanClock->W() / 2 };
-				auto uurl{ CreateLabel(std::to_string(vec),pos.X + midden,pos.Y + midden,0,0,PhanClock,8)};
+				auto uurl{ CreateLabel(std::to_string(20-vec),pos.X + midden,pos.Y + midden,0,0,PhanClock,8)};
 				uurl->SetFont(FntLiquid());
 			}
 			auto PhanCenter = CreateGroup(PhanClock->W() / 2, PhanClock->W() / 2, 0, 0, PhanClock);
@@ -214,7 +223,23 @@ namespace Slyvina {
 			Bell->checked = ConfigSlaan();
 			Bell->CBAction = SetBell;
 			Bell->SetForeground(0, 180, 255, 255);
+			auto Schedule{ CreateButton("Schedule",0,200,ClkGroup) };
+			Schedule->SetForeground(255, 180, 0);
+			Schedule->SetBackground(25, 18, 0);
+			Schedule->CBAction = ActButton;
+			auto CountDown{ CreateButton("Countdown",0,225,ClkGroup) };
+			CountDown->SetForeground(255, 180, 0);
+			CountDown->SetBackground(25, 18, 0);
+			CountDown->CBAction = ActButton;
+			// Schedule
+			auto SchPanel{ NewPanel("Schedule") };
+			auto SchBack{ CreateButton("Back",0,0,SchPanel) };
+			SchBack->CBDraw = DrwBack;
+			SchBack->CBAction = ActBack;
+
+			GoToPanel("Clock");
 		}
+
 		void Gwen_Run() {
 			while (true) {
 				Cls(); Poll();
