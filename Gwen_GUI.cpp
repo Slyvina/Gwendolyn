@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.02 II
+// Version: 24.12.02 I
 // End License
 
 #include "Gwen_GUI.hpp"
@@ -169,11 +169,13 @@ namespace Slyvina {
 		}
 		static void DrwSchedButtons(j19gadget* g, j19action) {
 			auto Next{ (j19gadget*)g->bData };
-			if (Next) g->Y(Next->Y() - g->H());
+			g->Y(Next ? Next->Y() - g->H() - 1 : WorkScreen()->Y() - 5 - g->H());
 			g->X(std::min(g->X() + 1, SchIndexGroup->X()));
+			g->Enabled = g->Caption == "Add" || ListSchedule->SelectedItem() >= 0;
 		}
 
 		static void ActSchedButtons(j19gadget*g,j19action){}
+		static void ActSchedRemove(j19gadget* g, j19action) {}
 #pragma endregion
 
 
@@ -303,10 +305,11 @@ namespace Slyvina {
 			SchIndexRemove->SetFont(FntRyanna());
 			SchIndexAdd->CBAction = ActSchedButtons;
 			SchIndexEdit->CBAction = ActSchedButtons;
-			SchIndexRemove->CBAction = ActSchedButtons;
+			SchIndexRemove->CBAction = ActSchedRemove;
 			SchIndexAdd->CBDraw = DrwSchedButtons;
 			SchIndexEdit->CBDraw = DrwSchedButtons;
 			SchIndexRemove->CBDraw = DrwSchedButtons;
+			
 
 
 
