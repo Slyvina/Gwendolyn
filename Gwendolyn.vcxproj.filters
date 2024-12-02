@@ -31,6 +31,9 @@
     <Filter Include="Source Files\June19">
       <UniqueIdentifier>{9b25d466-8370-47f1-9d5d-3d6d4b7d0de0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Units">
+      <UniqueIdentifier>{7d1b3c7b-8588-4c5c-ba3b-503aee6ee770}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Gwendolyn.cpp">
@@ -138,6 +141,9 @@
     <ClCompile Include="Gwen_Schedule.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Libs\Units\Source\SlyvPhantasarTime.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Gwen_Jalondi.lua">
@@ -161,6 +167,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Gwen_Schedule.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libs\Units\Headers\SlyvPhantasarTime.hpp">
+      <Filter>Header Files\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libs\Units\Headers\SlyvTime.hpp">
+      <Filter>Header Files\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -203,5 +218,15 @@
     <CopyFileToFolders Include="..\..\Libs\TQSL\SDL2\SDL2_image.dll" />
     <CopyFileToFolders Include="..\..\Libs\TQSL\SDL2\SDL2_mixer.dll" />
     <CopyFileToFolders Include="..\..\Libs\TQSL\SDL2\zlib1.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Gwendolyn.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Icon\Gwendolyn.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

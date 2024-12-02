@@ -157,6 +157,7 @@
     <ClCompile Include="..\..\Libs\Units\Source\SlyvDir.cpp" />
     <ClCompile Include="..\..\Libs\Units\Source\SlyvDirry.cpp" />
     <ClCompile Include="..\..\Libs\Units\Source\SlyvOpenURL.cpp" />
+    <ClCompile Include="..\..\Libs\Units\Source\SlyvPhantasarTime.cpp" />
     <ClCompile Include="..\..\Libs\Units\Source\SlyvQCol.cpp" />
     <ClCompile Include="..\..\Libs\Units\Source\SlyvRequestFile.cpp" />
     <ClCompile Include="..\..\Libs\Units\Source\SlyvRoman.cpp" />
@@ -227,11 +228,14 @@
     <None Include="Gwen_Jalondi.ps1" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Libs\Units\Headers\SlyvPhantasarTime.hpp" />
+    <ClInclude Include="..\..\Libs\Units\Headers\SlyvTime.hpp" />
     <ClInclude Include="Gwen_Assets.hpp" />
     <ClInclude Include="Gwen_Clock.hpp" />
     <ClInclude Include="Gwen_Config.hpp" />
     <ClInclude Include="Gwen_GUI.hpp" />
     <ClInclude Include="Gwen_Schedule.hpp" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\Libs\JCR6\3rdParty\zlib\zlibstatic.lib" />
@@ -240,6 +244,12 @@
     <Library Include="..\..\Libs\TQSL\SDL2\SDL2test.lib" />
     <Library Include="..\..\Libs\TQSL\SDL2\SDL2_image.lib" />
     <Library Include="..\..\Libs\TQSL\SDL2\SDL2_mixer.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Gwendolyn.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Icon\Gwendolyn.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
