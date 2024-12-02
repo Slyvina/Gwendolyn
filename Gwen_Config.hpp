@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.11.30
+// Version: 24.12.02
 // End License
 #pragma once
 #include <SlyvGINIE.hpp>
@@ -33,5 +33,6 @@ namespace Slyvina {
 		inline String ConfigFile() { return Units::Dirry("$AppSupport$/Gwendolyn.ini"); }
 		Units::GINIE Config();
 		inline bool ConfigSlaan() { return Config()->NewValue("Bell", "Bell", "TRUE") == "TRUE"; }
+		inline bool ConfigBool(String C, String V, bool dv = false) { return Units::Upper(Config()->NewValue(C, V, uboolstring(dv))) == "TRUE"; }
 	}
 }
