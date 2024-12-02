@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.02 I
+// Version: 24.12.02 II
 // End License
 
 #include "Gwen_GUI.hpp"
@@ -70,7 +70,8 @@ namespace Slyvina {
 		static j19gadget
 			* NormClock{ nullptr },
 			* PhanClock{ nullptr },
-			* NormCenter{ nullptr };
+			* NormCenter{ nullptr },
+			* SchIndexGroup{ nullptr };
 		static TImage GroteWijzer{ nullptr }, KleineWijzer{ nullptr };
 
 
@@ -166,6 +167,13 @@ namespace Slyvina {
 				Config()->Value("Schedule","Index", g->Caption.substr(9));
 			}
 		}
+		static void DrwSchedButtons(j19gadget* g, j19action) {
+			auto Next{ (j19gadget*)g->bData };
+			if (Next) g->Y(Next->Y() - g->H());
+			g->X(std::min(g->X() + 1, SchIndexGroup->X()));
+		}
+
+		static void ActSchedButtons(j19gadget*g,j19action){}
 #pragma endregion
 
 
@@ -220,7 +228,7 @@ namespace Slyvina {
 			PhanDigi->CBDraw = PhanDigiTime;
 			PhanDigi->SetFont(FntRyanna());
 			auto PhanDW{ FntRyanna()->Width("Dopplosephuh-99") };
-			auto PhanDatum{ CreateLabel("",(PhanClock->W() / 2) - (PhanDW / 2),PhanClock->H() *.35,PhanDW,FntRyanna()->Height("WPwp"),PhanClock,2)};
+			auto PhanDatum{ CreateLabel("",(PhanClock->W() / 2) - (PhanDW / 2),(int)(PhanClock->H() * .35),PhanDW,FntRyanna()->Height("WPwp"),PhanClock,2) };
 			PhanDatum->SetBackground(0, 0, 0, 0xff);
 			PhanDatum->SetForeground(0, 255, 255, 255);
 			PhanDatum->CBDraw = DrwPhanDate;
@@ -271,13 +279,36 @@ namespace Slyvina {
 			ListSchedule = CreateListBox(5, 5, 200, SchPanel->H() - 40, SchPanel);
 			ListSchedule->SetForeground(255, 180, 0);
 			ListSchedule->SetBackground(90, 0, 100);
-			auto SchIndexGroup = CreateGroup(250, 0, SchPanel->W() - 260, 32, SchPanel);
+			SchIndexGroup = CreateGroup(250, 0, SchPanel->W() - 260, 32, SchPanel);
 			auto SchIndexLabel = CreateRadioButton("Index by label", 0, 0, 0, 0, SchIndexGroup, Upper(Config()->NewValue("Schedule", "Index", "label")) == "LABEL");
 			auto SchIndexTime = CreateRadioButton("Index by time", 0, 16, 0, 0, SchIndexGroup, Upper(Config()->NewValue("Schedule", "Index", "label")) == "TIME");
 			SchIndexLabel->SetForeground(255, 180, 0);
 			SchIndexLabel->CBAction = ChkSchIndex;
 			SchIndexTime->CBAction = ChkSchIndex;
 			SchIndexTime->SetForeground(255, 180, 0);
+			auto SchIndexAdd{ CreateButton("Add",40,0,SchPanel) };
+			auto SchIndexEdit{ CreateButton("Edit",20,0,SchPanel) };
+			auto SchIndexRemove{ CreateButton("Remove",0,0,SchPanel) };
+			SchIndexAdd->SetForeground(0, 255, 0);
+			SchIndexAdd->SetBackground(0, 25, 0);
+			SchIndexAdd->bData = SchIndexEdit;
+			SchIndexAdd->SetFont(FntRyanna());
+			SchIndexEdit->SetForeground(255, 255, 0);
+			SchIndexEdit->SetBackground(25, 25, 0);
+			SchIndexEdit->bData = SchIndexRemove;
+			SchIndexEdit->SetFont(FntRyanna());
+			SchIndexRemove->SetForeground(255, 0, 0);
+			SchIndexRemove->SetBackground(25, 0, 0);
+			SchIndexRemove->bData = nullptr;
+			SchIndexRemove->SetFont(FntRyanna());
+			SchIndexAdd->CBAction = ActSchedButtons;
+			SchIndexEdit->CBAction = ActSchedButtons;
+			SchIndexRemove->CBAction = ActSchedButtons;
+			SchIndexAdd->CBDraw = DrwSchedButtons;
+			SchIndexEdit->CBDraw = DrwSchedButtons;
+			SchIndexRemove->CBDraw = DrwSchedButtons;
+
+
 
 			// Countdown
 			auto CntPanel{ NewPanel("Countdown") };
