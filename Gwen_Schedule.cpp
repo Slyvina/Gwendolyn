@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.02 I
+// Version: 24.12.03
 // End License
 
 #include "Gwen_Schedule.hpp"
@@ -42,6 +42,20 @@ namespace Slyvina {
 			{eRepeat::Weekly,"Weekly"},
 			{eRepeat::Monthly,"Monthly"},
 			{eRepeat::Annual,"Annual"}
+		};
+		static std::map<String, int> MaxDays{
+			{"January",31},
+			{"February",29}, // Please note, since the year is not given, there's no way the system can tell if it's a leap year or not!
+			{"March",31},
+			{"April",30},
+			{"May",31},
+			{"June",30},
+			{"July",31},
+			{"August",31},
+			{"September",30},
+			{"October",31},
+			{"November",30},
+			{"December",31}
 		};
 
 		Units::GINIE TSchedule::_Data{ nullptr };
@@ -188,7 +202,9 @@ namespace Slyvina {
 			LstWeekDay->AddItem("Thursday");
 			LstWeekDay->AddItem("Friday");
 			LstWeekDay->AddItem("Saturday");
-			LstWeekDay->CBDraw = DrwWeek;
+			LstWeekDay->CBDraw = DrwWeek; 
+			y += 50;
+
 			return ret;
 		}
 
