@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.02 I
+// Version: 24.12.02 IV
 // End License
 
 #include "Gwen_GUI.hpp"
@@ -36,6 +36,7 @@
 #include <SlyvTime.hpp>
 #include "Gwen_Config.hpp"
 #include <SlyvPhantasarTime.hpp>
+#include "Gwen_Schedule.hpp"
 
 
 using namespace Slyvina;
@@ -174,8 +175,8 @@ namespace Slyvina {
 			g->Enabled = g->Caption == "Add" || ListSchedule->SelectedItem() >= 0;
 		}
 
-		static void ActSchedButtons(j19gadget*g,j19action){}
-		static void ActSchedRemove(j19gadget* g, j19action) {}
+		static void ActSchedButtons(j19gadget*g,j19action){ Schedule(g->Caption == "Add" ? "*new" : ListSchedule->ItemText()); }
+		static void ActSchedRemove(j19gadget* g, j19action) {  }
 #pragma endregion
 
 

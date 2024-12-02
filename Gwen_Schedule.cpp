@@ -22,16 +22,27 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.02
+// Version: 24.12.02 I
 // End License
 
 #include "Gwen_Schedule.hpp"
 #include <SlyvDirry.hpp>
 #include <SlyvQCol.hpp>
+#include <june19.hpp>
+#include "Gwen_GUI.hpp"
 using namespace Slyvina::Units;
+using namespace Slyvina::June19;
 
 namespace Slyvina {
 	namespace Gwendolyn {
+
+		static std::map<eRepeat,String> _mRepeat{
+			{eRepeat::Dont,"Don't"},
+			{eRepeat::Daily,"Daily"},
+			{eRepeat::Weekly,"Weekly"},
+			{eRepeat::Monthly,"Monthly"},
+			{eRepeat::Annual,"Annual"}
+		};
 
 		Units::GINIE TSchedule::_Data{ nullptr };
 		std::map<String, TSchedule> TSchedule::_TrueDataBase{};
@@ -86,5 +97,104 @@ namespace Slyvina {
 		void TSchedule::Minute(int value) { _Data->Value(_Record, "Minute", value % 60); _Index(); }
 		void TSchedule::Second(int value) { _Data->Value(_Record, "Second", value % 60); _Index(); }
 		String TSchedule::Time(int h) { return h == 12 ? TrSPrintF("%2d:%2d:2d", Hour12(), Minute(), Second()) + ampm() : TrSPrintF("%2d:%2d:2d", Hour(), Minute(), Second()); }
+		String sRepeat(eRepeat n) { return _mRepeat[n]; }
+		eRepeat sRepeat(String n) {
+			Trans2Upper(n);
+			for (auto f : _mRepeat) {
+				if (n == Upper(f.second)) return f.first;
+			}
+			QCol->Error("Unknown repeat type! Reverting to basic value!");
+			return eRepeat::Dont;
+		}
+
+		static j19gadget
+			* RecordLabel,
+			* LabelText,
+			* TimHr, * TimMn, * TimSc,
+			* ChkDestroy,
+			* LstWeekDay;
+		static std::map<String, j19gadget*> gRepeat{};
+
+		static void TmCorrect(j19gadget*, j19action) {
+			int
+				hr{ ToInt(TimHr->Text) },
+				mn{ ToInt(TimMn->Text) },
+				sc{ ToInt(TimSc->Text) };
+			TimHr->Text = hr > 0 ? std::to_string(std::min(23, hr)) : "";
+			TimMn->Text = mn > 0 ? std::to_string(std::min(59, mn)) : "";
+			TimSc->Text = sc > 0 ? std::to_string(std::min(59, sc)) : "";
+			ChkDestroy->Enabled = gRepeat["Don't"]->checked;
+			ChkDestroy->checked = ChkDestroy->checked && gRepeat["Don't"]->checked;
+		}
+		static void RepCol(j19gadget* g, j19action) {
+			if (g->checked) {
+				g->FR = g->FR > 180 ? --g->FR : g->FR;
+				g->FG = g->FG < 255 ? ++g->FG : g->FG;
+			} else {
+				g->FG = g->FG > 180 ? --g->FG : g->FG;
+				g->FR = g->FR < 255 ? ++g->FR : g->FR;
+			}
+			g->FB = g->FB > 0 ? --g->FB : g->FB;
+		}
+		static void ColChk(j19gadget* g, j19action) {
+			g->FR = g->checked ? 0 : 255;
+			g->FG = g->checked ? 255 : 0;
+			g->FB = g->FB > 0 ? g->FB - 1 : 0;
+			g->Caption = g->checked ? "Yes" : "No";
+		}
+		static void DrwWeek(j19gadget* g, j19action) {
+			static int Hue{ 0 }; 
+			if (gRepeat["Weekly"]->checked) {
+				g->Enabled = true;
+				Hue = (Hue + 1) % 3600;
+			} else { g->Enabled = false; }
+			g->SetForegroundHSV(Hue / 10, 1, 1);
+			g->SetBackgroundHSV(360 - (Hue / 10), 1, .25);
+		}
+
+
+#define schLabField(var,desc) var = CreateLabel("",252,y,ret->W()-300,16,ret); var->SetForeground(255,255,255,255); CreateLabel(desc,2,y,250,16,ret); y+=16;
+#define schStrField(var,desc) var = CreateTextfield(252,y,ret->W()-300,16,ret); var->SetForeground(180,255,0,255); var->SetBackground(18,25,0,255); CreateLabel(desc,2,y,250,16,ret); y+=16;
+#define schChkField(var,desc) var = CreateCheckBox("",252,y,ret->W()-300,16,ret); var->CBDraw=ColChk; CreateLabel(desc,2,y,250,16,ret); y+=16;
+		static j19gadget* CreateSchedulePanel() {
+			QCol->Doing("Initizing", "Schedule Edit UI");
+			auto ret{ NewPanel("ScheduleEdit") };
+			int y{ 2 };
+			schLabField(RecordLabel, "Record:");
+			schStrField(LabelText, "Label:");
+			CreateLabel("Time:", 2, y, 250, 16, ret);
+			TimHr = CreateTextfield(252, y, 48, ret);
+			TimMn = CreateTextfield(302, y, 48, ret);
+			TimSc = CreateTextfield(352, y, 48, ret); y += 20;
+			TimHr->SetForeground(0, 180, 255);
+			TimMn->SetForeground(0, 180, 255);
+			TimSc->SetForeground(0, 180, 255);
+			TimHr->SetBackground(0, 18, 25);
+			TimMn->SetBackground(0, 18, 25);
+			TimSc->SetBackground(0, 18, 25);
+			TimHr->CBDraw = TmCorrect;
+			CreateLabel("Repeat:", 2, y, 250, 16, ret);			
+			for (auto& R : _mRepeat) {
+				gRepeat[R.second] = CreateRadioButton(R.second, 252, y, 200, 16, ret); y += 16;
+				gRepeat[R.second]->CBDraw = RepCol;
+			}
+			schChkField(ChkDestroy, "Destroy:");
+			CreateLabel("Day of week:", 2, y, 250, 16, ret);
+			LstWeekDay = CreateListBox(252, y, 300, 50, ret);
+			LstWeekDay->AddItem("Sunday");
+			LstWeekDay->AddItem("Monday");
+			LstWeekDay->AddItem("Tuesday");
+			LstWeekDay->AddItem("Wednesday");
+			LstWeekDay->AddItem("Thursday");
+			LstWeekDay->AddItem("Friday");
+			LstWeekDay->AddItem("Saturday");
+			LstWeekDay->CBDraw = DrwWeek;
+			return ret;
+		}
+
+		void Schedule(String rec) {
+			static auto SchedulePanel{ CreateSchedulePanel() };
+			GoToPanel("ScheduleEdit");
+		}
 	}
 }

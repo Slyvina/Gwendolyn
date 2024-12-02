@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.01
+// Version: 24.12.02
 // End License
 #pragma once
 #include <Slyvina.hpp>
@@ -31,6 +31,8 @@ namespace Slyvina {
 	namespace Gwendolyn {
 
 		class TSchedule;
+
+		enum class eRepeat{Dont,Daily,Weekly,Monthly,Annual};
 
 		class TSchedule {
 		private:
@@ -57,6 +59,10 @@ namespace Slyvina {
 			String Time(int h=24);
 			String ampm() { return Hour() >= 12 ? "pm" : "am"; }
 		};
+
+		String sRepeat(eRepeat n);
+		eRepeat sRepeat(String n);
+		void Schedule(String rec = "*new*");
 
 	}
 }
