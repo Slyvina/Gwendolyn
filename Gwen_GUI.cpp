@@ -22,8 +22,9 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.01 I
+// Version: 24.12.02 I
 // End License
+
 #include "Gwen_GUI.hpp"
 #include "Gwen_Assets.hpp"
 #include "Gwen_Clock.hpp"
@@ -34,6 +35,7 @@
 #include <june19.hpp>
 #include <SlyvTime.hpp>
 #include "Gwen_Config.hpp"
+#include <SlyvPhantasarTime.hpp>
 
 
 using namespace Slyvina;
@@ -155,6 +157,15 @@ namespace Slyvina {
 			g->FB = g->FG;
 			g->BR < 25 ? g->BR++ : g->BR;
 		}
+		static void DrwWeekday(j19gadget* g, j19action) { g->Caption = QTimeF("%A"); }
+		static void DrwData(j19gadget* g, j19action) { g->Caption = QTimeF("%B %d, %Y"); }
+		static void DrwPhanDate(j19gadget* g, j19action) { g->Caption = PhanDate(); }
+		static void ChkSchIndex(j19gadget* g, j19action) { 
+			if (g->checked) {
+				QCol->Doing("Schedule Index", g->Caption.substr(9));
+				Config()->Value("Schedule","Index", g->Caption.substr(9));
+			}
+		}
 #pragma endregion
 
 
@@ -178,6 +189,18 @@ namespace Slyvina {
 			NormDigi->SetBackground(0, 0, 0, 255);
 			NormDigi->CBDraw = NormDigiTime;
 			NormDigi->SetFont(FntRyanna());
+			auto SatW = FntSys()->Width("Wednesday");
+			auto DatW = FntSys()->Width("September 30th, 8888");
+			auto DatY = (int)floor(NormClock->H() * .20);
+			auto WeekDay{ CreateLabel("",(NormClock->W() / 2) - (SatW / 2),DatY,SatW,16,NormClock,2) };
+			WeekDay->SetForeground(0, 255, 255, 255);
+			WeekDay->SetBackground(0, 0, 0, 255);
+			WeekDay->CBDraw = DrwWeekday;
+			auto DatLab{ CreateLabel("",(NormClock->W() / 2) - (DatW / 2),DatY + 16,DatW,16,NormClock,2) };
+			DatLab->SetForeground(0, 255, 255, 255);
+			DatLab->SetBackground(0, 0, 0, 255);
+			DatLab->CBDraw = DrwData;
+
 			for (auto uur = 1; uur <= 12; uur++) {
 				auto pos{ DegSpot((uur % 12) * 30,200) };
 				auto midden{ NormClock->W() / 2 };
@@ -196,6 +219,12 @@ namespace Slyvina {
 			PhanDigi->SetBackground(0, 0, 0, 255);
 			PhanDigi->CBDraw = PhanDigiTime;
 			PhanDigi->SetFont(FntRyanna());
+			auto PhanDW{ FntRyanna()->Width("Dopplosephuh-99") };
+			auto PhanDatum{ CreateLabel("",(PhanClock->W() / 2) - (PhanDW / 2),PhanClock->H() *.35,PhanDW,FntRyanna()->Height("WPwp"),PhanClock,2)};
+			PhanDatum->SetBackground(0, 0, 0, 0xff);
+			PhanDatum->SetForeground(0, 255, 255, 255);
+			PhanDatum->CBDraw = DrwPhanDate;
+			PhanDatum->SetFont(FntRyanna());
 			for (auto vec = 1; vec <= 20; vec++) {
 				auto pos{ DegSpot(vec * 18,220) };
 				auto midden{ PhanClock->W() / 2 };
@@ -242,6 +271,13 @@ namespace Slyvina {
 			ListSchedule = CreateListBox(5, 5, 200, SchPanel->H() - 40, SchPanel);
 			ListSchedule->SetForeground(255, 180, 0);
 			ListSchedule->SetBackground(90, 0, 100);
+			auto SchIndexGroup = CreateGroup(250, 0, SchPanel->W() - 260, 32, SchPanel);
+			auto SchIndexLabel = CreateRadioButton("Index by label", 0, 0, 0, 0, SchIndexGroup, Upper(Config()->NewValue("Schedule", "Index", "label")) == "LABEL");
+			auto SchIndexTime = CreateRadioButton("Index by time", 0, 16, 0, 0, SchIndexGroup, Upper(Config()->NewValue("Schedule", "Index", "label")) == "TIME");
+			SchIndexLabel->SetForeground(255, 180, 0);
+			SchIndexLabel->CBAction = ChkSchIndex;
+			SchIndexTime->CBAction = ChkSchIndex;
+			SchIndexTime->SetForeground(255, 180, 0);
 
 			// Countdown
 			auto CntPanel{ NewPanel("Countdown") };
