@@ -22,12 +22,12 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.01
+// Version: 24.12.02
 // End License
 
 #include "Gwen_Schedule.hpp"
 #include <SlyvDirry.hpp>
-#include "../../Libs/Units/Source/SlyvQCol.cpp"
+#include <SlyvQCol.hpp>
 using namespace Slyvina::Units;
 
 namespace Slyvina {
@@ -36,6 +36,7 @@ namespace Slyvina {
 		Units::GINIE TSchedule::_Data{ nullptr };
 		std::map<String, TSchedule> TSchedule::_TrueDataBase{};
 		std::map<String, String> TSchedule::_ByTime{};
+		std::map<String, String> TSchedule::_ByLabel{};
 		void TSchedule::_Load(bool force) {
 			if ((!_Data) || force) _Data = LoadOptGINIE(ScheduleFile(), ScheduleFile(), "Gwendolyn schedule data");
 		}
