@@ -31,6 +31,7 @@
 #include <june19.hpp>
 #include "Gwen_GUI.hpp"
 #include "Gwen_Assets.hpp"
+#include <SlyvTime.hpp>
 using namespace Slyvina::Units;
 using namespace Slyvina::June19;
 
@@ -134,6 +135,7 @@ namespace Slyvina {
 		static std::map<String, j19gadget*> gRepeat{};
 		static j19gadget* WeekDayCheck[7];
 		static j19gadget* MonthDayCheck[32]; // By exception starting at 1 and ignoring 0. For month and month days that'll work handier.
+		static j19gadget* MonthCheck[13];
 		
 
 		static void TmCorrect(j19gadget*, j19action) {
@@ -197,6 +199,8 @@ namespace Slyvina {
 				Fade(g->FB, 127);
 			}
 		}
+		static void DrwCancelButton(j19gadget* g, j19action) { g->Y(g->GetParent()->H() + 2); }
+		static void ActCancelButton(j19gadget*, j19action) { GoToPanel("Schedule"); }
 
 
 #define schLabField(var,desc) var = CreateLabel("",252,y,ret->W()-300,16,ret); var->SetForeground(255,255,255,255); CreateLabel(desc,2,y,250,16,ret); y+=16;
@@ -258,19 +262,45 @@ namespace Slyvina {
 				auto mnt{ Months[i] };
 				auto mdw{ FntMini()->Width(mnt) + 25 };
 				if (mdx + mdw > ret->W() - 20) { mdx = 252; y += FntMini()->Height("The quick brown fox jumps over the lazy dog") + 3; }
-				MonthDayCheck[i] = CreateCheckBox(mnt, mdx, y, 0, 0, ret);
+				MonthCheck[i] = CreateCheckBox(mnt, mdx, y, 0, 0, ret);
 				mdx += mdw; 
-				MonthDayCheck[i]->SetFont(FntMini());
-				MonthDayCheck[i]->CBDraw = DrawMonthDay;
+				MonthCheck[i]->SetFont(FntMini());
+				MonthCheck[i]->CBDraw = DrawMonthDay;
 			}
 			y += FntMini()->Height("The quick brown fox jumps over the lazy dog") + 3;
 			schChkField(ChkActive, "Active");
+			auto Ok{ CreateButton("Ok",2,y,ret) };
+			Ok->SetBackground(0, 25, 0);
+			Ok->SetForeground(0, 255, 0);
+			Ok->SetFont(FntRyanna());
+			auto Cancel{ CreateButton("Cancel",2,y,Ok) };
+			Cancel->SetBackground(25, 0, 0);
+			Cancel->SetForeground(255, 0, 0);
+			Cancel->CBDraw = DrwCancelButton;
+			Cancel->SetFont(FntRyanna());
+			Cancel->CBAction = ActCancelButton;
 			return ret;
 		}
 
 		void Schedule(String rec) {
 			static auto SchedulePanel{ CreateSchedulePanel() };
 			GoToPanel("ScheduleEdit");
+			QCol->Doing("Record:", rec);
+			if (rec == "*new") {
+				RecordLabel->Caption = "*New record*";
+				LabelText->Text = "";
+				TimHr->Text = std::to_string((CurrentHour() + 2) % 24);
+				TimMn->Text = std::to_string(CurrentMinute());
+				TimSc->Text = std::to_string(CurrentSecond());
+				for (auto wd : gRepeat) wd.second->checked = wd.first == "Don't";
+				ChkDestroy->Enabled = false;
+				for (int i = 0; i <= 6; ++i) WeekDayCheck[i]->checked = false;
+				for (int i = 1; i <= 31; ++i) MonthDayCheck[i]->checked = false;
+				for (int i = 1; i <= 12; ++i) MonthCheck[i]->checked = false;
+				ChkActive->checked = true;
+			} else {
+				QCol->Warn("Fetching record '" + rec + "' not yet possible");
+			}
 		}
 	}
 }
