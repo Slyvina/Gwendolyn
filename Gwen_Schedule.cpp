@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.03
+// Version: 24.12.03 I
 // End License
 
 #include "Gwen_Schedule.hpp"
@@ -30,6 +30,7 @@
 #include <SlyvQCol.hpp>
 #include <june19.hpp>
 #include "Gwen_GUI.hpp"
+#include "Gwen_Assets.hpp"
 using namespace Slyvina::Units;
 using namespace Slyvina::June19;
 
@@ -57,6 +58,8 @@ namespace Slyvina {
 			{"November",30},
 			{"December",31}
 		};
+		static const char Months[13][20]{ "--", "January","February","March","April","May","June","July","August","September","October","November","December" };
+		static const char WeekDayNames[7][10]{ "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday" };
 
 		Units::GINIE TSchedule::_Data{ nullptr };
 		std::map<String, TSchedule> TSchedule::_TrueDataBase{};
@@ -126,8 +129,12 @@ namespace Slyvina {
 			* LabelText,
 			* TimHr, * TimMn, * TimSc,
 			* ChkDestroy,
-			* LstWeekDay;
+			* ChkActive;
+			//* LstWeekDay;
 		static std::map<String, j19gadget*> gRepeat{};
+		static j19gadget* WeekDayCheck[7];
+		static j19gadget* MonthDayCheck[32]; // By exception starting at 1 and ignoring 0. For month and month days that'll work handier.
+		
 
 		static void TmCorrect(j19gadget*, j19action) {
 			int
@@ -165,6 +172,31 @@ namespace Slyvina {
 			g->SetForegroundHSV(Hue / 10, 1, 1);
 			g->SetBackgroundHSV(360 - (Hue / 10), 1, .25);
 		}
+		void Fade(Byte& B, Byte To) { B = B < To ? B + 1 : (B > To ? B - 1 : B); }
+		static void DrwWeekDay(j19gadget* g, j19action) {
+			g->Enabled = gRepeat["Don't"]->checked || gRepeat["Weekly"]->checked;
+			if (g->Enabled) {
+				Fade(g->FR, g->checked ? 180 : 255);
+				Fade(g->FG, g->checked ? 255 : 0);
+				Fade(g->FB, 0);
+			} else {
+				Fade(g->FR, 127);
+				Fade(g->FG, 127);
+				Fade(g->FB, 127);
+			}
+		}
+		static void DrawMonthDay(j19gadget* g, j19action) {
+			g->Enabled = g->Caption.size() == 2 ? gRepeat["Don't"]->checked || gRepeat["Monthly"]->checked || gRepeat["Annual"]->checked : gRepeat["Don't"]->checked || gRepeat["Annual"]->checked;
+			if (g->Enabled) {
+				Fade(g->FR, g->checked ? 180 : 255);
+				Fade(g->FG, g->checked ? 255 : 0);
+				Fade(g->FB, 0);
+			} else {
+				Fade(g->FR, 127);
+				Fade(g->FG, 127);
+				Fade(g->FB, 127);
+			}
+		}
 
 
 #define schLabField(var,desc) var = CreateLabel("",252,y,ret->W()-300,16,ret); var->SetForeground(255,255,255,255); CreateLabel(desc,2,y,250,16,ret); y+=16;
@@ -194,6 +226,7 @@ namespace Slyvina {
 			}
 			schChkField(ChkDestroy, "Destroy:");
 			CreateLabel("Day of week:", 2, y, 250, 16, ret);
+			/*
 			LstWeekDay = CreateListBox(252, y, 300, 50, ret);
 			LstWeekDay->AddItem("Sunday");
 			LstWeekDay->AddItem("Monday");
@@ -204,7 +237,34 @@ namespace Slyvina {
 			LstWeekDay->AddItem("Saturday");
 			LstWeekDay->CBDraw = DrwWeek; 
 			y += 50;
-
+			*/
+			for (int wi = 0; wi < 7; wi++) {
+				WeekDayCheck[wi] = CreateCheckBox(WeekDayNames[wi], 252, y, 200, 16, ret); y += 16;
+				WeekDayCheck[wi]->CBDraw = DrwWeekDay;
+			}
+			CreateLabel("Day of Month:", 2, y, 250, 16, ret);
+			for (int i = 1; i <= 31; i++) {
+				static auto mdx{ 252 };
+				static auto mdw{ FntMini()->Width("1234") };
+				MonthDayCheck[i] = CreateCheckBox(TrSPrintF("%2d", i), mdx, y,0,0, ret);
+				mdx += mdw; if (mdx + mdw > ret->W() - 20) { mdx = 252; y += FntMini()->Height("The quick brown fox jumps over the lazy dog")+3; }
+				MonthDayCheck[i]->SetFont(FntMini());
+				MonthDayCheck[i]->CBDraw = DrawMonthDay;
+			}
+			y += FntMini()->Height("The quick brown fox jumps over the lazy dog") + 3;
+			CreateLabel("Month:", 2, y, 250, 16, ret);
+			for (int i = 1; i <= 12; i++) {
+				static auto mdx{ 252 };
+				auto mnt{ Months[i] };
+				auto mdw{ FntMini()->Width(mnt) + 25 };
+				if (mdx + mdw > ret->W() - 20) { mdx = 252; y += FntMini()->Height("The quick brown fox jumps over the lazy dog") + 3; }
+				MonthDayCheck[i] = CreateCheckBox(mnt, mdx, y, 0, 0, ret);
+				mdx += mdw; 
+				MonthDayCheck[i]->SetFont(FntMini());
+				MonthDayCheck[i]->CBDraw = DrawMonthDay;
+			}
+			y += FntMini()->Height("The quick brown fox jumps over the lazy dog") + 3;
+			schChkField(ChkActive, "Active");
 			return ret;
 		}
 

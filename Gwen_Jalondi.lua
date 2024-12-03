@@ -22,7 +22,7 @@
 -- 	Please note that some references to data like pictures or audio, do not automatically
 -- 	fall under this licenses. Mostly this is noted in the respective files.
 -- 
--- Version: 24.11.30 II
+-- Version: 24.12.03
 -- End License
 SDL2Dir = "../../Libs/TQSL/SDL2/"
 
@@ -38,6 +38,7 @@ Updated=%s
 Jalondi.Add("Assets","","zlib")
 Jalondi.Add("../../../../Fonts/DosFont/DosFont.jfbf","Fonts/System.jfbf","zlib","","","System Font") -- Normally I would recommend AGAINST solid blocks for jfbf fonts.
 Jalondi.Add("../../../../Fonts/jfbf/Ryanna","Fonts/Ryanna.jfbf","zlib","","","Ryanna Font")
+Jalondi.Add("../../../../Fonts/jfbf/Mini","Fonts/Mini.jfbf","zlib","","","Mini Font");
 
 SDL_Licenses = {"FLAC.txt", "modplug.txt", "mpg123.txt","ogg-vorbis.txt","opus.txt","opusfile.txt"}
 for _,SDLL in pairs(SDL_Licenses) do
