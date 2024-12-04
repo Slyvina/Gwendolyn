@@ -22,9 +22,14 @@
 -- 	Please note that some references to data like pictures or audio, do not automatically
 -- 	fall under this licenses. Mostly this is noted in the respective files.
 -- 
--- Version: 24.12.03
+-- Version: 24.12.04
 -- End License
 SDL2Dir = "../../Libs/TQSL/SDL2/"
+
+function file_exists(name)
+   local f=io.open(name,"r")
+   if f~=nil then io.close(f) return true else return false end
+end
 
 Jalondi.AddString(sprintf([[
 # ID data
@@ -43,6 +48,24 @@ Jalondi.Add("../../../../Fonts/jfbf/Mini","Fonts/Mini.jfbf","zlib","","","Mini F
 SDL_Licenses = {"FLAC.txt", "modplug.txt", "mpg123.txt","ogg-vorbis.txt","opus.txt","opusfile.txt"}
 for _,SDLL in pairs(SDL_Licenses) do
 	Jalondi.Add(sprintf("%sLICENSE.%s",SDL2Dir,SDLL),sprintf("Licenses/SDL2/%s",SDLL),"zlib","See file content","License","License_SDL2")
+end
+
+-- None of these are present in my repository (copyright reasons)
+-- You may need to adept this script in order to put in your own alarms.
+XAssets = {
+	{"Sound Effects/Pixabay/relaxing-guitar-loop-v5-245859.mp3","Guitar Loops.mp3"},
+	{"Sound Effects/Pixabay/stab-f-01-brvhrtz-224599.mp3","Stab.mp3"},
+	{"Sound Effects/Pixabay/ascent-braam-magma-brass-d-cinematic-trailer-sound-effect-222269.mp3","Braam.mp3"},
+	{"Sound Effects/Pixabay/labyrinth-for-the-brain-190096.mp3","Labyrinth for the brain.mp3"}
+}
+for _,a in pairs(XAssets) do
+	local fa="../../../../3rd Party Assets/"..a[1]
+	if file_exists(fa) then
+		Jalondi.Add(fa,"Assets/Audio/Alarm/"..a[2],"zlib")
+		Jalondi.Doing("Alarm",a[1])
+	else
+		print("\x1b[91mError: \x1b[96mFile not found: \x1b[0m"..fa)
+	end
 end
 
 Jalondi.Start("Exe/Windows/Gwendolyn.jcr")
