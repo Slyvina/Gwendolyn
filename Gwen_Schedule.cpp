@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.03 III
+// Version: 24.12.04
 // End License
 
 #include "Gwen_Schedule.hpp"
@@ -130,7 +130,9 @@ namespace Slyvina {
 			* LabelText,
 			* TimHr, * TimMn, * TimSc,
 			* ChkDestroy,
-			* ChkActive;
+			* ChkActive,
+			* AlarmIntern, * AlarmExtern,
+			* IntAlarmList, * ExtAlarmFld, *ExtAlarmButton;
 			//* LstWeekDay;
 		static std::map<String, j19gadget*> gRepeat{};
 		static j19gadget* WeekDayCheck[7];
@@ -165,12 +167,14 @@ namespace Slyvina {
 			g->FB = g->FB > 0 ? g->FB - 1 : 0;
 			g->Caption = g->checked ? "Yes" : "No";
 		}
-		static void DrwWeek(j19gadget* g, j19action) {
+		static void DrwHueGadget(j19gadget* g, j19action) {
 			static int Hue{ 0 }; 
+			/*
 			if (gRepeat["Weekly"]->checked) {
 				g->Enabled = true;
-				Hue = (Hue + 1) % 3600;
 			} else { g->Enabled = false; }
+			//*/
+			Hue = (Hue + 1) % 3600;
 			g->SetForegroundHSV(Hue / 10, 1, 1);
 			g->SetBackgroundHSV(360 - (Hue / 10), 1, .25);
 		}
@@ -201,6 +205,24 @@ namespace Slyvina {
 		}
 		static void DrwCancelButton(j19gadget* g, j19action) { g->Y(g->GetParent()->H() + 2); }
 		static void ActCancelButton(j19gadget*, j19action) { GoToPanel("Schedule"); }
+		static void DrwAlarm(j19gadget* g, j19action) {
+			Fade(g->FR, g->checked ? 180 : 250);
+			Fade(g->FG, g->checked ? 255 : 0);
+			Fade(g->FB, 0);
+			Fade(g->BG, g->checked ? 25 : 0);
+			Fade(g->BA, g->checked ? 255 : 0);
+			g->BR = 0;
+			g->BB = 0;
+		}
+		static void AlarmShow(j19gadget*, j19action) {
+			IntAlarmList->Visible = AlarmIntern->checked;
+			ExtAlarmFld->Visible = AlarmExtern->checked;
+			ExtAlarmButton->Visible = AlarmExtern->checked;
+#ifndef  SlyvWindows
+			ExtAlarmButton->Enabled = false; // No Linux support YET!
+#endif // ! SlyvWindows
+
+		}
 
 
 #define schLabField(var,desc) var = CreateLabel("",252,y,ret->W()-300,16,ret); var->SetForeground(255,255,255,255); CreateLabel(desc,2,y,250,16,ret); y+=16;
@@ -267,7 +289,27 @@ namespace Slyvina {
 				MonthCheck[i]->SetFont(FntMini());
 				MonthCheck[i]->CBDraw = DrawMonthDay;
 			}
-			y += FntMini()->Height("The quick brown fox jumps over the lazy dog") + 3;
+			y += (FntMini()->Height("The quick brown fox jumps over the lazy dog") + 3)*2;
+			CreateLabel("Alarm:", 2, y, 250, 16, ret);
+			auto Alarm{ CreateGroup(252, y, 500, 16, ret) };
+			AlarmIntern = CreateRadioButton("Intern", 0, 0,  200,16, Alarm);
+			AlarmExtern = CreateRadioButton("Extern", 200, 0, 200, 16, Alarm);
+			AlarmIntern->CBDraw = DrwAlarm;
+			AlarmExtern->CBDraw = DrwAlarm;
+			y += 16;
+			IntAlarmList = CreateListBox(252, y, 300, 50,ret);
+			schStrField(ExtAlarmFld, "Alarm File: ");
+			ExtAlarmButton = CreateButton("...", ExtAlarmFld->DrawX() + ExtAlarmFld->W(),ExtAlarmFld->Y(), ret);
+			ExtAlarmButton->SetFont(FntMini());
+			ExtAlarmButton->SetForeground(250, 180, 0);
+			ExtAlarmButton->SetBackground(25, 18, 0);
+			Alarm->CBDraw = AlarmShow;
+			IntAlarmList->CBDraw = DrwHueGadget;
+			y += 50;
+			// Assets/Audio/Alarm /
+			for (auto& e : Res()->_Entries) {
+				if (ExtractDir(e.first) == "ASSETS/AUDIO/ALARM") IntAlarmList->AddItem(StripAll(e.second->Name()));
+			}
 			schChkField(ChkActive, "Active");
 			auto Ok{ CreateButton("Ok",2,y,ret) };
 			Ok->SetBackground(0, 25, 0);
@@ -285,7 +327,7 @@ namespace Slyvina {
 		void Schedule(String rec) {
 			static auto SchedulePanel{ CreateSchedulePanel() };
 			GoToPanel("ScheduleEdit");
-			QCol->Doing("Record:", rec);
+			QCol->Doing("Record", rec);
 			if (rec == "*new") {
 				RecordLabel->Caption = "*New record*";
 				LabelText->Text = "";
@@ -298,6 +340,8 @@ namespace Slyvina {
 				for (int i = 1; i <= 31; ++i) MonthDayCheck[i]->checked = false;
 				for (int i = 1; i <= 12; ++i) MonthCheck[i]->checked = false;
 				ChkActive->checked = true;
+				AlarmIntern->checked = true;
+				AlarmExtern->checked = false;
 			} else {
 				QCol->Warn("Fetching record '" + rec + "' not yet possible");
 			}
