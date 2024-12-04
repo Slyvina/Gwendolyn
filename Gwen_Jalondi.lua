@@ -22,7 +22,7 @@
 -- 	Please note that some references to data like pictures or audio, do not automatically
 -- 	fall under this licenses. Mostly this is noted in the respective files.
 -- 
--- Version: 24.12.04
+-- Version: 24.12.04 I
 -- End License
 SDL2Dir = "../../Libs/TQSL/SDL2/"
 
@@ -56,7 +56,8 @@ XAssets = {
 	{"Sound Effects/Pixabay/relaxing-guitar-loop-v5-245859.mp3","Guitar Loops.mp3"},
 	{"Sound Effects/Pixabay/stab-f-01-brvhrtz-224599.mp3","Stab.mp3"},
 	{"Sound Effects/Pixabay/ascent-braam-magma-brass-d-cinematic-trailer-sound-effect-222269.mp3","Braam.mp3"},
-	{"Sound Effects/Pixabay/labyrinth-for-the-brain-190096.mp3","Labyrinth for the brain.mp3"}
+	{"Sound Effects/Pixabay/labyrinth-for-the-brain-190096.mp3","Labyrinth for the brain.mp3"},
+	{"Sound Effects/Pixabay/ambient-piano-logo-165357.mp3","Ambient Piano Logo.mp3"}
 }
 for _,a in pairs(XAssets) do
 	local fa="../../../../3rd Party Assets/"..a[1]
