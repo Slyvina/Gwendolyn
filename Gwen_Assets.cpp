@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.11.30 IV
+// Version: 24.12.04
 // End License
 #include "Gwen_Assets.hpp"
 #include <SlyvStream.hpp>
@@ -45,6 +45,8 @@ namespace Slyvina {
 		static JT_Dir _Res{ nullptr };
 		static GINIE _ResID{ nullptr };
 		static std::map<String, TQSG::TImageFont> _Font;
+		static TAudio LastAlarm{ nullptr };
+		static String LastAlarmFile = "";
 
 		String ResFile(String A0) {
 			if (_ResFile.size()) return _ResFile;
@@ -106,6 +108,28 @@ namespace Slyvina {
 			auto ret{ LoadImage(Res(), groot ? "GFX/Grote Wijzer.png" : "GFX/Kleine Wijzer.png") };
 			ret->Hot(WIJZER_HOT_X, WIJZER_HOT_Y);
 			return ret;
+		}
+
+		void PlayAlarm(bool intern, String File, bool loop) {
+			auto Tag = boolstring(intern) + "::" + File;
+			if (Tag != LastAlarmFile || (!LastAlarm)) {
+				if (intern) {
+					auto FFile{ "Assets/Audio/Alarm/" + File + ".mp3" };
+					if (!Res()->EntryExists(FFile)) { QCol->Error("Internal resource doesn't have that file: "+FFile); return; }
+					LastAlarm = LoadAudio(Res(), FFile);
+				} else {
+					if (!FileExists(File)) {
+						QCol->Error("File not found: " + File);
+						return;
+					}
+					LastAlarm = LoadAudio(File);
+				}
+				if (!LastAlarm) {
+					QCol->Error("Alarm sound didn't load: " + ((intern) ? "Internal:" + File : File));
+					return;
+				}
+			}
+			LastAlarm->ChPlay(2, loop ? -1 : 0);
 		}
 
 		void Slaan(int times) {

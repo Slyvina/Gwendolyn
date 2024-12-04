@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.04
+// Version: 24.12.04 I
 // End License
 
 #include "Gwen_Schedule.hpp"
@@ -221,7 +221,9 @@ namespace Slyvina {
 #ifndef  SlyvWindows
 			ExtAlarmButton->Enabled = false; // No Linux support YET!
 #endif // ! SlyvWindows
-
+		}
+		static void PreviewAlarm(j19gadget*, j19action) {
+			PlayAlarm(AlarmIntern->checked, AlarmIntern->checked ? IntAlarmList->ItemText() : ExtAlarmFld->Text);
 		}
 
 
@@ -305,6 +307,10 @@ namespace Slyvina {
 			ExtAlarmButton->SetBackground(25, 18, 0);
 			Alarm->CBDraw = AlarmShow;
 			IntAlarmList->CBDraw = DrwHueGadget;
+			auto Preview{ CreateButton("Play",IntAlarmList->DrawX() + IntAlarmList->W() + 75,y,ret) };
+			Preview->SetForeground(255, 255, 0);
+			Preview->SetBackground(0, 0, 255);
+			Preview->CBAction = PreviewAlarm;
 			y += 50;
 			// Assets/Audio/Alarm /
 			for (auto& e : Res()->_Entries) {
