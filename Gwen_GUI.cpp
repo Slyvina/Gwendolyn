@@ -282,10 +282,11 @@ namespace Slyvina {
 			auto SchBack{ CreateButton("Back",0,0,SchPanel) };
 			SchBack->CBDraw = DrwBack;
 			SchBack->CBAction = ActBack;
-			ListSchedule = CreateListBox(5, 5, 200, SchPanel->H() - 40, SchPanel);
+			ListSchedule = CreateListBox(5, 5, 400, SchPanel->H() - 40, SchPanel);
 			ListSchedule->SetForeground(255, 180, 0);
 			ListSchedule->SetBackground(90, 0, 100);
-			SchIndexGroup = CreateGroup(250, 0, SchPanel->W() - 260, 32, SchPanel);
+			auto LSW{ ListSchedule->W() + 60 };
+			SchIndexGroup = CreateGroup(LSW, 0, SchPanel->W() - LSW, 32, SchPanel);
 			SchIndexLabel = CreateRadioButton("Index by label", 0, 0, 0, 0, SchIndexGroup, Upper(Config()->NewValue("Schedule", "Index", "label")) == "LABEL");
 			SchIndexTime = CreateRadioButton("Index by time", 0, 16, 0, 0, SchIndexGroup, Upper(Config()->NewValue("Schedule", "Index", "label")) == "TIME");
 			SchIndexLabel->SetForeground(255, 180, 0);
@@ -324,6 +325,7 @@ namespace Slyvina {
 			CntBack->CBAction = ActBack;
 
 			// Must be last!
+			TSchedule::RefreshScheduleList();
 			GoToPanel("Clock");
 		}
 

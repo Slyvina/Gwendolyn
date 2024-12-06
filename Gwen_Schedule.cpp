@@ -141,7 +141,9 @@ namespace Slyvina {
 			if (!dont) _Index(true);
 			ListSchedule->ClearItems();
 			for (auto iidx : _idx) {
-				ListSchedule->AddItem(_TrueDataBase[iidx.second].Record()+": "+_TrueDataBase[iidx.second].Label());
+				QCol->Doing(iidx.first, iidx.second);
+				auto Rec{ GetRecord(iidx.second) };
+				ListSchedule->AddUniqueItem(Rec->Record().substr(5) + ": " + Rec->Label());
 			}
 		}
 
