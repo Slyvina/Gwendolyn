@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.04 I
+// Version: 24.12.07
 // End License
 
 #include "Gwen_Schedule.hpp"
@@ -69,7 +69,7 @@ namespace Slyvina {
 		void TSchedule::_Load(bool force) {
 			if ((!_Data) || force) _Data = LoadOptGINIE(ScheduleFile(), ScheduleFile(), "Gwendolyn schedule data");
 		}
-		void TSchedule::_Index() {
+		void TSchedule::_Index(bool dont) {
 			_Load();
 			auto cats{ _Data->Categories() };
 			_ByTime.clear();
@@ -77,6 +77,7 @@ namespace Slyvina {
 				_ByTime[TrSPrintF("%02d%02d%02d", _Data->NewValue(c, "Hour", 0), _Data->NewValue(c, "Minute", 0), _Data->NewValue(c, "Second", 0))] = c;
 				_ByLabel[_Data->Value(c, "Label").size() ? _Data->Value(c, "Label") : "!!!!!!!!!!!!!!!!!!!!!UNLABELED:" + c] = c;
 			}
+			if (!dont) RefreshScheduleList(true);
 		}
 
 		String TSchedule::ScheduleFile() {
@@ -115,6 +116,37 @@ namespace Slyvina {
 		void TSchedule::Minute(int value) { _Data->Value(_Record, "Minute", value % 60); _Index(); }
 		void TSchedule::Second(int value) { _Data->Value(_Record, "Second", value % 60); _Index(); }
 		String TSchedule::Time(int h) { return h == 12 ? TrSPrintF("%2d:%2d:2d", Hour12(), Minute(), Second()) + ampm() : TrSPrintF("%2d:%2d:2d", Hour(), Minute(), Second()); }
+		String TSchedule::Label() { return _Data->Value(_Record, "Label"); }
+		void TSchedule::Label(String v) { _Data->Value(_Record, "Label", v); }
+		String TSchedule::Repeat() { return _Data->Value(_Record, "Repeat"); }
+		void TSchedule::Repeat(String V) { _Data->Value(_Record, "Repeat", V); }
+		bool TSchedule::Destroy() { return _Data->BoolValue(_Record, "Destroy"); }
+		void TSchedule::Destroy(bool v) { _Data->BoolValue(_Record, "Destroy", v); }
+		void TSchedule::WeekDay(String wd, bool v) { _Data->BoolValue(_Record, "Weekday::" + wd, v); }
+		bool TSchedule::WeekDay(String wd) { return _Data->BoolValue(_Record, "Weekday::" + wd); }
+		void TSchedule::Alarm(bool intern, String File) {
+			_Data->BoolValue(_Record, "Alarm_Where", intern);
+			_Data->Value(_Record, "Alarm_File", File);
+		}
+
+		AlarmRef TSchedule::Alarm() {
+			return AlarmRef{ _Data->BoolValue(_Record, "Alarm_Wjere"), _Data->Value(_Record, "Alarm_File") };
+		}
+
+		void TSchedule::Active(bool value) { _Data->BoolValue(_Record, "Active"); }
+		bool TSchedule::Active() { return _Data->BoolValue(_Record, "Active"); }
+
+		void TSchedule::RefreshScheduleList(bool dont) {
+			auto& _idx{ SchIndexLabel->checked ? _ByLabel : _ByTime };
+			if (!dont) _Index(true);
+			ListSchedule->ClearItems();
+			for (auto iidx : _idx) {
+				ListSchedule->AddItem(_TrueDataBase[iidx.second].Record()+": "+_TrueDataBase[iidx.second].Label());
+			}
+		}
+
+
+
 		String sRepeat(eRepeat n) { return _mRepeat[n]; }
 		eRepeat sRepeat(String n) {
 			Trans2Upper(n);
@@ -226,6 +258,26 @@ namespace Slyvina {
 			PlayAlarm(AlarmIntern->checked, AlarmIntern->checked ? IntAlarmList->ItemText() : ExtAlarmFld->Text);
 		}
 
+		static void ActOkay(j19gadget*,j19action) {
+			auto Rec{ RecordLabel->Caption[0] == '*' ? TSchedule::NewRecord() : TSchedule::GetRecord(RecordLabel->Caption) };
+			Rec->Label(LabelText->Text.size() ? LabelText->Text : Rec->Label());
+			Rec->Hour(ToInt(TimHr->Text));
+			Rec->Minute(ToInt(TimMn->Text));
+			Rec->Second(ToInt(TimSc->Text));
+			String Rep{ "Don't" };
+			for (auto gt : gRepeat) { 
+				auto g{ gt.second };
+				if (g->checked) Rep = g->Caption;
+			}
+			Rec->Repeat(Rep);
+			Rec->Destroy(ChkDestroy->checked);
+			for (int wi = 0; wi < 7; wi++) Rec->WeekDay(WeekDayCheck[wi]->Caption, WeekDayCheck[wi]->checked);
+			Rec->Alarm(AlarmIntern->checked, AlarmIntern->checked ? IntAlarmList->ItemText() : ExtAlarmFld->Text);
+			Rec->Active(ChkActive->checked);
+		}
+
+
+
 
 #define schLabField(var,desc) var = CreateLabel("",252,y,ret->W()-300,16,ret); var->SetForeground(255,255,255,255); CreateLabel(desc,2,y,250,16,ret); y+=16;
 #define schStrField(var,desc) var = CreateTextfield(252,y,ret->W()-300,16,ret); var->SetForeground(180,255,0,255); var->SetBackground(18,25,0,255); CreateLabel(desc,2,y,250,16,ret); y+=16;
@@ -327,6 +379,7 @@ namespace Slyvina {
 			Cancel->CBDraw = DrwCancelButton;
 			Cancel->SetFont(FntRyanna());
 			Cancel->CBAction = ActCancelButton;
+			Ok->CBAction = ActOkay;
 			return ret;
 		}
 

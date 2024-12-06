@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.02 IV
+// Version: 24.12.07
 // End License
 
 #include "Gwen_GUI.hpp"
@@ -51,8 +51,11 @@ using namespace June19;
 namespace Slyvina {
 	namespace Gwendolyn {
 
-		j19gadget* 
-			ListSchedule{ nullptr };
+		j19gadget
+			* ListSchedule{ nullptr },
+			* SchIndexLabel{ nullptr },
+			* SchIndexTime{ nullptr };
+
 
 #pragma region ClockSpot
 		ClockSpot DegSpot(double deg,double straal) {						
@@ -283,8 +286,8 @@ namespace Slyvina {
 			ListSchedule->SetForeground(255, 180, 0);
 			ListSchedule->SetBackground(90, 0, 100);
 			SchIndexGroup = CreateGroup(250, 0, SchPanel->W() - 260, 32, SchPanel);
-			auto SchIndexLabel = CreateRadioButton("Index by label", 0, 0, 0, 0, SchIndexGroup, Upper(Config()->NewValue("Schedule", "Index", "label")) == "LABEL");
-			auto SchIndexTime = CreateRadioButton("Index by time", 0, 16, 0, 0, SchIndexGroup, Upper(Config()->NewValue("Schedule", "Index", "label")) == "TIME");
+			SchIndexLabel = CreateRadioButton("Index by label", 0, 0, 0, 0, SchIndexGroup, Upper(Config()->NewValue("Schedule", "Index", "label")) == "LABEL");
+			SchIndexTime = CreateRadioButton("Index by time", 0, 16, 0, 0, SchIndexGroup, Upper(Config()->NewValue("Schedule", "Index", "label")) == "TIME");
 			SchIndexLabel->SetForeground(255, 180, 0);
 			SchIndexLabel->CBAction = ChkSchIndex;
 			SchIndexTime->CBAction = ChkSchIndex;
