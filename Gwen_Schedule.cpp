@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.07 IV
+// Version: 24.12.07 V
 // End License
 
 #include "Gwen_Schedule.hpp"
@@ -461,6 +461,10 @@ namespace Slyvina {
 		void CheckScheduleAlarm() {
 			static auto oldtime{ CurrentTime() };
 			auto newtime(CurrentTime());
+			if (Active) {
+				// TODO: Code!
+				return;
+			}
 			if (newtime == oldtime) return;
 			auto H{ CurrentHour() }, M(CurrentMinute()), S{ CurrentSecond() };
 			auto recs{ TSchedule::Records() };
@@ -468,7 +472,10 @@ namespace Slyvina {
 				auto rec{ TSchedule::GetRecord(rid) };
 				if (!rec->Active()) continue;
 				if (H != rec->Hour() || M != rec->Minute() || S != rec->Second()) continue;
-
+				if (rec->Repeat() == "Daily") { Active = rec; break; }
+				else if (rec->Repeat() == "Weekly") {
+					 if (rec->WeekDay(WeekDay()))  { Active = rec; break; }
+				}
 			}
 		}
 	}
