@@ -172,6 +172,7 @@
     <ClCompile Include="Gwen_Assets.cpp" />
     <ClCompile Include="Gwen_Clock.cpp" />
     <ClCompile Include="Gwen_Config.cpp" />
+    <ClCompile Include="Gwen_CountDown.cpp" />
     <ClCompile Include="Gwen_GUI.cpp" />
     <ClCompile Include="Gwen_Schedule.cpp" />
   </ItemGroup>
@@ -233,6 +234,7 @@
     <ClInclude Include="Gwen_Assets.hpp" />
     <ClInclude Include="Gwen_Clock.hpp" />
     <ClInclude Include="Gwen_Config.hpp" />
+    <ClInclude Include="Gwen_CountDown.hpp" />
     <ClInclude Include="Gwen_GUI.hpp" />
     <ClInclude Include="Gwen_Schedule.hpp" />
     <ClInclude Include="Gwen_Version.hpp" />
