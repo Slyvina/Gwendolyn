@@ -482,8 +482,8 @@ namespace Slyvina {
 				g->SetBackground(0, 100, 0);
 			} else {
 				static int d{ 0 }; d = (d + 1) % 360;
-				double v{ abs(sin(((double)d * PI) * 180)) };
-				g->SetBackgroundHSV(0, 1, v);
+				//double v{ abs(sin(((double)d * PI) * 180)) };
+				g->SetBackgroundHSV(0, 1, CurrentSecond() % 2);
 			}
 			BarLabel->Caption = Active->Label();
 		}
@@ -492,11 +492,11 @@ namespace Slyvina {
 			if (!Active) return;
 			g->Caption = Active->Destroy() ? "Terminate and delete" : "Terminate";
 			g->Y(BarSchedule->H() - g->H());				
-			Mix_HaltChannel(2);
 		}
 		static void ActSnooze(j19gadget*, j19action) {
 			if (!Active) return;
 			Active->SecAlarmSnooze = 300;
+			Mix_HaltChannel(2);
 		}
 		static void ActKill(j19gadget*, j19action) { 
 			if (!Active) return;
