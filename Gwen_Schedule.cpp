@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.07 XII
+// Version: 24.12.07 XIII
 // End License
 
 #include "Gwen_Schedule.hpp"
@@ -482,7 +482,7 @@ namespace Slyvina {
 				g->SetBackground(0, 100, 0);
 			} else {
 				static int d{ 0 }; d = (d + 1) % 360;
-				static double v{ abs(sin(((double)d * PI) * 180)) };
+				double v{ abs(sin(((double)d * PI) * 180)) };
 				g->SetBackgroundHSV(0, 1, v);
 			}
 			BarLabel->Caption = Active->Label();
