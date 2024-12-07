@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.07 XV
+// Version: 24.12.07 XVI
 // End License
 
 #include "Gwen_Schedule.hpp"
@@ -500,6 +500,7 @@ namespace Slyvina {
 		}
 		static void ActKill(j19gadget*, j19action) { 
 			if (!Active) return;
+			if (Active->Repeat() == "Don't") Active->Active(false);
 			if (Active->Destroy()) { TSchedule::Kill(Active->Record()); }
 			HideScheduleAlarm(); 
 		}
