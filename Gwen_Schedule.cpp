@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.07 III
+// Version: 24.12.07 IV
 // End License
 
 #include "Gwen_Schedule.hpp"
@@ -66,12 +66,14 @@ namespace Slyvina {
 		std::map<String, TSchedule> TSchedule::_TrueDataBase{};
 		std::map<String, String> TSchedule::_ByTime{};
 		std::map<String, String> TSchedule::_ByLabel{};
+		VecString _Cats{ nullptr };
 		void TSchedule::_Load(bool force) {
 			if ((!_Data) || force) _Data = LoadOptGINIE(ScheduleFile(), ScheduleFile(), "Gwendolyn schedule data");
 		}
 		void TSchedule::_Index(bool dont) {
 			_Load();
 			auto cats{ _Data->Categories() };
+			_Cats = cats;
 			_ByTime.clear();
 			_ByLabel.clear();
 			for (auto c : *cats) {
@@ -443,6 +445,30 @@ namespace Slyvina {
 					ExtAlarmFld->Caption = A.File;
 					IntAlarmList->SelectItem(0);
 				}
+			}
+		}
+
+		static j19gadget* BarSchedule{ nullptr };
+		static TSchedule* Active{ nullptr };
+		void HideScheduleAlarm() {
+			if (BarSchedule) BarSchedule->Visible = false;
+		}
+
+		static void InitBarSchedule() {
+
+		}
+
+		void CheckScheduleAlarm() {
+			static auto oldtime{ CurrentTime() };
+			auto newtime(CurrentTime());
+			if (newtime == oldtime) return;
+			auto H{ CurrentHour() }, M(CurrentMinute()), S{ CurrentSecond() };
+			auto recs{ TSchedule::Records() };
+			for (auto rid : *recs) {
+				auto rec{ TSchedule::GetRecord(rid) };
+				if (!rec->Active()) continue;
+				if (H != rec->Hour() || M != rec->Minute() || S != rec->Second()) continue;
+
 			}
 		}
 	}

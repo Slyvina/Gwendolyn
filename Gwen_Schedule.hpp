@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.07 II
+// Version: 24.12.07 III
 // End License
 #pragma once
 #include <Slyvina.hpp>
@@ -43,9 +43,11 @@ namespace Slyvina {
 			static std::map<String, TSchedule> _TrueDataBase;
 			static std::map<String, String> _ByTime;
 			static std::map<String, String> _ByLabel;
+			static VecString _Cats;
 			static void _Load(bool force=false);
 			static void _Index(bool dont=false);
 		public:
+			static inline std::vector<String>* Records() { return _Cats.get(); }
 			inline String Record() { return _Record; }
 			static String ScheduleFile();
 			static TSchedule* NewRecord();
@@ -85,6 +87,9 @@ namespace Slyvina {
 		String sRepeat(eRepeat n);
 		eRepeat sRepeat(String n);
 		void Schedule(String rec = "*new*");
+
+		void HideScheduleAlarm();
+		void CheckScheduleAlarm();
 
 	}
 }
