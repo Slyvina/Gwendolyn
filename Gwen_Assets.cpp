@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.07
+// Version: 24.12.07 I
 // End License
 #include "Gwen_Assets.hpp"
 #include <SlyvStream.hpp>
@@ -116,6 +116,7 @@ namespace Slyvina {
 			if (Tag != LastAlarmFile || (!LastAlarm)) {
 				if (intern) {
 					auto FFile{ "Assets/Audio/Alarm/" + File + ".mp3" };
+					QCol->Doing("Getting intern", FFile);
 					if (!Res()->EntryExists(FFile)) { QCol->Error("Internal resource doesn't have that file: "+FFile); return; }
 					LastAlarm = LoadAudio(Res(), FFile);
 				} else {
@@ -123,6 +124,7 @@ namespace Slyvina {
 						QCol->Error("File not found: " + File);
 						return;
 					}
+					QCol->Doing("Getting extern", File);
 					LastAlarm = LoadAudio(File);
 				}
 				if (!LastAlarm) {

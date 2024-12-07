@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.07 XI
+// Version: 24.12.07 XII
 // End License
 
 #include "Gwen_Schedule.hpp"
@@ -165,7 +165,7 @@ namespace Slyvina {
 			if (!dont) _Index(true);
 			ListSchedule->ClearItems();
 			for (auto iidx : _idx) {
-				QCol->Doing(iidx.first, iidx.second);
+				//QCol->Doing(iidx.first, iidx.second); // debug
 				auto Rec{ GetRecord(iidx.second) };
 				ListSchedule->AddUniqueItem(Rec->Record().substr(5) + ": " + Rec->Label());
 			}
@@ -507,11 +507,11 @@ namespace Slyvina {
 
 		static void InitBarSchedule() {
 			if (BarSchedule) return;
-			BarSchedule = CreatePanel(1, WorkScreen()->H() - 201, WorkScreen()->W()-2, 200, WorkScreen());
+			BarSchedule = CreatePanel(1, WorkScreen()->H() - 101, WorkScreen()->W()-2, 100, WorkScreen());
 			BarLabel = CreateLabel("N/A", 5, 5, WorkScreen()->W(), 40, BarSchedule);
 			BarLabel->SetFont(FntRyanna());
 			BarLabel->SetForeground(255, 255, 0);
-			BarLabel->CBDraw = DrawBarSchedule;
+			BarSchedule->CBDraw = DrawBarSchedule;
 			BarSnooze = CreateButton("Snooze", 0, 0, BarSchedule);
 			BarKill = CreateButton("End", 0, 0, BarSchedule);
 			BarSnooze->CBDraw = DrawSnooze;
@@ -530,12 +530,14 @@ namespace Slyvina {
 			if (Active) {
 				if (Active->SecAlarmSnooze > 0) {
 					if ((--Active->SecAlarmSnooze) <= 0) PlayAlarm(Active->Alarm(), true);
+					//QCol->Doing("Debug", TrSPrintF("Snooze seconds left: %03d", Active->SecAlarmSnooze)); 
 				}
 				if (--Active->SecAlarmCountDown <= 0) {
 					HideScheduleAlarm();
 					Active = nullptr;
 					return; // safety pre-caution, in case I may need to add code later that could bump into a null pointer.
 				}
+				return;
 			}
 			auto H{ CurrentHour() }, M(CurrentMinute()), S{ CurrentSecond() };
 			auto recs{ TSchedule::Records() };
@@ -562,7 +564,7 @@ namespace Slyvina {
 				}
 			}
 			if (Active) {
-				QCol->Doing("Alarm:", Active->Record());
+				QCol->Doing("Alarm", Active->Record());
 				InitBarSchedule();
 				Active->SecAlarmCountDown = 60 * 60;
 				Active->SecAlarmSnooze = 0;
