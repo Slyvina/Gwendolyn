@@ -235,6 +235,7 @@
     <ClInclude Include="Gwen_Config.hpp" />
     <ClInclude Include="Gwen_GUI.hpp" />
     <ClInclude Include="Gwen_Schedule.hpp" />
+    <ClInclude Include="Gwen_Version.hpp" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

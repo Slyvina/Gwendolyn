@@ -22,13 +22,14 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.11.30 I
+// Version: 24.12.08
 // End License
 
 #include <JCR6_zlib.hpp>
 #include <SlyvQCol.hpp>
 #include "Gwen_Assets.hpp"
 #include "Gwen_GUI.hpp"
+#include "Gwen_Version.hpp"
 
 using namespace Slyvina;
 using namespace Slyvina::JCR6;
@@ -38,6 +39,7 @@ using namespace Slyvina::Gwendolyn;
 int main(int ca, char** args) {
 	JCR_InitZlib();
 	QCol->LMagenta("Gwendolyn\n");
+	QCol->Doing("Version", QVersion.Version());
 	QCol->Doing("Coded by", "Jeroen P. Broks");
 	CheckAssets(args[0]);
 	Gwen_Init();

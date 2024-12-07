@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.07 IV
+// Version: 24.12.08
 // End License
 
 #include "Gwen_GUI.hpp"
@@ -37,6 +37,7 @@
 #include "Gwen_Config.hpp"
 #include <SlyvPhantasarTime.hpp>
 #include "Gwen_Schedule.hpp"
+#include "Gwen_Version.hpp"
 
 
 using namespace Slyvina;
@@ -197,7 +198,7 @@ namespace Slyvina {
 				ReleaseConsole(); 
 			}
 #endif
-			Graphics(WinW, WinH, "Gwendolyn - (c) Jeroen P. Broks"); Cls(); Flip();
+			Graphics(WinW, WinH, "Gwendolyn - "+QVersion.Version(false) + " - (c)Jeroen P.Broks"); Cls(); Flip();
 			j19gadget::SetDefaultFont(FntSys());
 			// Clock Panel
 			auto Clk{ NewPanel("Clock") };
