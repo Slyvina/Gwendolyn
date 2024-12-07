@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.07 IX
+// Version: 24.12.07 XI
 // End License
 
 #include "Gwen_Schedule.hpp"
@@ -157,7 +157,7 @@ namespace Slyvina {
 			return AlarmRef{ _Data->BoolValue(_Record, "Alarm_Where"), _Data->Value(_Record, "Alarm_File") };
 		}
 
-		void TSchedule::Active(bool value) { _Data->BoolValue(_Record, "Active"); }
+		void TSchedule::Active(bool value) { _Data->BoolValue(_Record, "Active",value); }
 		bool TSchedule::Active() { return _Data->BoolValue(_Record, "Active"); }
 
 		void TSchedule::RefreshScheduleList(bool dont) {
@@ -461,6 +461,7 @@ namespace Slyvina {
 					ExtAlarmFld->Caption = A.File;
 					IntAlarmList->SelectItem(0);
 				}
+				ChkActive->checked = GR->Active();
 			}
 		}
 
@@ -486,7 +487,7 @@ namespace Slyvina {
 			}
 			BarLabel->Caption = Active->Label();
 		}
-		static void DrawSnooze(j19gadget* g, j19action) { g->Enabled = Active && Active->SecAlarmSnooze > 0; g->Y(BarKill->Y() - g->H() - 2); }
+		static void DrawSnooze(j19gadget* g, j19action) { g->Enabled = Active && Active->SecAlarmSnooze <= 0; g->Y(BarKill->Y() - g->H() - 2); }
 		static void DrawKill(j19gadget* g, j19action) {
 			if (!Active) return;
 			g->Caption = Active->Destroy() ? "Terminate and delete" : "Terminate";
@@ -510,6 +511,7 @@ namespace Slyvina {
 			BarLabel = CreateLabel("N/A", 5, 5, WorkScreen()->W(), 40, BarSchedule);
 			BarLabel->SetFont(FntRyanna());
 			BarLabel->SetForeground(255, 255, 0);
+			BarLabel->CBDraw = DrawBarSchedule;
 			BarSnooze = CreateButton("Snooze", 0, 0, BarSchedule);
 			BarKill = CreateButton("End", 0, 0, BarSchedule);
 			BarSnooze->CBDraw = DrawSnooze;
@@ -523,6 +525,7 @@ namespace Slyvina {
 			static auto oldtime{ CurrentTime() };
 			auto newtime(CurrentTime());
 			if (newtime == oldtime) return;
+			//QCol->Doing("Debug", "Schedule Check");
 			oldtime = newtime;
 			if (Active) {
 				if (Active->SecAlarmSnooze > 0) {
@@ -538,7 +541,9 @@ namespace Slyvina {
 			auto recs{ TSchedule::Records() };
 			for (auto rid : *recs) {
 				auto rec{ TSchedule::GetRecord(rid) };
+				//QCol->Doing("Debug", "Check: " + rid+ " Active: "+boolstring(rec->Active()));
 				if (!rec->Active()) continue;
+				//QCol->Doing("Debug", TrSPrintF("Time check %02d:%02d:%02d -> %02d:%02d:%02d", H, M, S, rec->Hour(), rec->Minute(), rec->Second()));
 				if (H != rec->Hour() || M != rec->Minute() || S != rec->Second()) continue;
 				if (rec->Repeat() == "Daily") { BrAct; }
 				else if (rec->Repeat() == "Weekly") {
@@ -557,6 +562,7 @@ namespace Slyvina {
 				}
 			}
 			if (Active) {
+				QCol->Doing("Alarm:", Active->Record());
 				InitBarSchedule();
 				Active->SecAlarmCountDown = 60 * 60;
 				Active->SecAlarmSnooze = 0;
