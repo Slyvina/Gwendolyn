@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.07 I
+// Version: 24.12.07 III
 // End License
 
 #include "Gwen_Schedule.hpp"
@@ -73,6 +73,7 @@ namespace Slyvina {
 			_Load();
 			auto cats{ _Data->Categories() };
 			_ByTime.clear();
+			_ByLabel.clear();
 			for (auto c : *cats) {
 				_ByTime[TrSPrintF("%02d%02d%02d", _Data->NewValue(c, "Hour", 0), _Data->NewValue(c, "Minute", 0), _Data->NewValue(c, "Second", 0))] = c;
 				_ByLabel[_Data->Value(c, "Label").size() ? _Data->Value(c, "Label") : "!!!!!!!!!!!!!!!!!!!!!UNLABELED:" + c] = c;
@@ -97,6 +98,7 @@ namespace Slyvina {
 		}
 
 		TSchedule* TSchedule::GetRecord(String Tag) {
+			Tag = Prefixed(Upper(Tag), "REC::") ? Tag : "REC::" + Tag;
 			if (!_Data->HasCat(Tag)) {
 				QCol->Error("Non-existent record requested!");
 				auto ret{ &_TrueDataBase["******FALSE"] };
@@ -124,13 +126,17 @@ namespace Slyvina {
 		void TSchedule::Destroy(bool v) { _Data->BoolValue(_Record, "Destroy", v); }
 		void TSchedule::WeekDay(String wd, bool v) { _Data->BoolValue(_Record, "Weekday::" + wd, v); }
 		bool TSchedule::WeekDay(String wd) { return _Data->BoolValue(_Record, "Weekday::" + wd); }
+		void TSchedule::MonthDay(int day, bool v) { _Data->BoolValue(_Record, TrSPrintF("MonthDay_%02d", day), v); }
+		bool TSchedule::MonthDay(int day) { return _Data->BoolValue(_Record, TrSPrintF("MonthDay_%02d", day)); }
+		void TSchedule::Month(String mn, bool v) { _Data->BoolValue(_Record, "Month_" + mn, v); }
+		bool TSchedule::Month(String mn) { return _Data->BoolValue(_Record, "Motn_" + mn); }
 		void TSchedule::Alarm(bool intern, String File) {
 			_Data->BoolValue(_Record, "Alarm_Where", intern);
 			_Data->Value(_Record, "Alarm_File", File);
 		}
 
 		AlarmRef TSchedule::Alarm() {
-			return AlarmRef{ _Data->BoolValue(_Record, "Alarm_Wjere"), _Data->Value(_Record, "Alarm_File") };
+			return AlarmRef{ _Data->BoolValue(_Record, "Alarm_Where"), _Data->Value(_Record, "Alarm_File") };
 		}
 
 		void TSchedule::Active(bool value) { _Data->BoolValue(_Record, "Active"); }
@@ -145,6 +151,13 @@ namespace Slyvina {
 				auto Rec{ GetRecord(iidx.second) };
 				ListSchedule->AddUniqueItem(Rec->Record().substr(5) + ": " + Rec->Label());
 			}
+		}
+
+		void TSchedule::Kill(String Tag) {
+			Tag = Prefixed(Upper(Tag), "REC::") ? Tag : "REC::" + Tag;
+			_Data->Kill(Tag);
+			QCol->Doing("Killed SCH", Tag);
+			_Index();
 		}
 
 
@@ -276,6 +289,7 @@ namespace Slyvina {
 			for (int wi = 0; wi < 7; wi++) Rec->WeekDay(WeekDayCheck[wi]->Caption, WeekDayCheck[wi]->checked);
 			Rec->Alarm(AlarmIntern->checked, AlarmIntern->checked ? IntAlarmList->ItemText() : ExtAlarmFld->Text);
 			Rec->Active(ChkActive->checked);
+			GoToPanel("Schedule");
 		}
 
 
@@ -403,8 +417,32 @@ namespace Slyvina {
 				ChkActive->checked = true;
 				AlarmIntern->checked = true;
 				AlarmExtern->checked = false;
+				IntAlarmList->SelectItem(0);
+				ExtAlarmFld->Caption = "";
 			} else {
-				QCol->Warn("Fetching record '" + rec + "' not yet possible");
+				//QCol->Warn("Fetching record '" + rec + "' not yet possible");
+				auto GR{ TSchedule::GetRecord(rec) };
+				RecordLabel->Caption = rec;
+				LabelText->Text = GR->Label();
+				TimHr->Text = std::to_string(GR->Hour());
+				TimMn->Text = std::to_string(GR->Minute());
+				TimSc->Text = std::to_string(GR->Second());
+				for (auto wd : gRepeat) wd.second->checked = GR->Repeat() == wd.first;
+				ChkDestroy->checked = GR->Destroy();
+				for (int i = 0; i <= 6; ++i) WeekDayCheck[i]->checked = GR->WeekDay(WeekDayCheck[i]->Caption);
+				for (int i = 1; i <= 31; ++i) MonthDayCheck[i]->checked = GR->MonthDay(i);
+				for (int i = 1; i <= 12; ++i) MonthCheck[i]->checked = GR->Month(MonthCheck[i]->Caption);
+				ChkActive->checked = GR->Active();
+				auto A{ GR->Alarm() };
+				AlarmIntern->checked = A.intern;
+				AlarmExtern->checked = !A.intern;
+				if (A.intern) {
+					IntAlarmList->SelectItem(A.File);
+					ExtAlarmFld->Caption = "";
+				} else {
+					ExtAlarmFld->Caption = A.File;
+					IntAlarmList->SelectItem(0);
+				}
 			}
 		}
 	}

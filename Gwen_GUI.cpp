@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.07 I
+// Version: 24.12.07 III
 // End License
 
 #include "Gwen_GUI.hpp"
@@ -169,6 +169,7 @@ namespace Slyvina {
 			if (g->checked) {
 				QCol->Doing("Schedule Index", g->Caption.substr(9));
 				Config()->Value("Schedule","Index", g->Caption.substr(9));
+				TSchedule::RefreshScheduleList();
 			}
 		}
 		static void DrwSchedButtons(j19gadget* g, j19action) {
@@ -178,8 +179,12 @@ namespace Slyvina {
 			g->Enabled = g->Caption == "Add" || ListSchedule->SelectedItem() >= 0;
 		}
 
-		static void ActSchedButtons(j19gadget*g,j19action){ Schedule(g->Caption == "Add" ? "*new" : ListSchedule->ItemText()); }
-		static void ActSchedRemove(j19gadget* g, j19action) {  }
+		static void ActSchedButtons(j19gadget* g, j19action) { Schedule(g->Caption == "Add" ? "*new" : ListSchedule->ItemText().substr(0, 9)); }
+		static void ActSchedRemove(j19gadget* g, j19action) { 
+			if (Yes("Are you sure you wish to remove record \"" + ListSchedule->ItemText() + "\"?")) {
+				TSchedule::Kill(ListSchedule->ItemText().substr(0, 9));
+			}
+		}
 #pragma endregion
 
 

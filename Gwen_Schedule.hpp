@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.07
+// Version: 24.12.07 II
 // End License
 #pragma once
 #include <Slyvina.hpp>
@@ -68,12 +68,17 @@ namespace Slyvina {
 			void Destroy(bool v);
 			void WeekDay(String wd,bool v);
 			bool WeekDay(String wd);
+			void MonthDay(int day, bool v);
+			bool MonthDay(int day);
+			void Month(String mn, bool v);
+			bool Month(String mn);
 			void Alarm(bool intern, String File);
 			inline void Alarm(AlarmRef r) { Alarm(r.intern, r.File); }
 			AlarmRef Alarm();
 			void Active(bool value);
 			bool Active();			
 			static void RefreshScheduleList(bool dont=false);
+			static void Kill(String rec);
 		};
 
 
