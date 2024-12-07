@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.07 II
+// Version: 24.12.07 III
 // End License
 #include "Gwen_Assets.hpp"
 #include <SlyvStream.hpp>
@@ -133,7 +133,7 @@ namespace Slyvina {
 				}
 			}
 			QCol->Doing("Playing", "Alarm sound");
-			LastAlarm->ChPlay(2) //, loop ? -1 : 0);
+			LastAlarm->ChPlay(2); //, loop ? -1 : 0);
 		}
 
 		void PlayAlarm(AlarmRef r, bool loop) { PlayAlarm(r.intern, r.File,loop); }
