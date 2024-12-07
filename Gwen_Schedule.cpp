@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.07 VIII
+// Version: 24.12.07 IX
 // End License
 
 #include "Gwen_Schedule.hpp"
@@ -67,7 +67,7 @@ namespace Slyvina {
 		std::map<String, TSchedule> TSchedule::_TrueDataBase{};
 		std::map<String, String> TSchedule::_ByTime{};
 		std::map<String, String> TSchedule::_ByLabel{};
-		VecString _Cats{ nullptr };
+		VecString TSchedule::_Cats{ nullptr };
 		void TSchedule::_Load(bool force) {
 			if ((!_Data) || force) _Data = LoadOptGINIE(ScheduleFile(), ScheduleFile(), "Gwendolyn schedule data");
 		}
