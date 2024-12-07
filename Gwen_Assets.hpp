@@ -22,11 +22,12 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.04
+// Version: 24.12.07
 // End License
 #pragma once
 #include <JCR6_Core.hpp>
 #include <TQSG.hpp>
+#include "Gwen_Schedule.hpp"
 
 namespace Slyvina {
 	namespace Gwendolyn {
@@ -47,6 +48,7 @@ namespace Slyvina {
 		TQSG::TImage GetWijzer(bool groot);
 
 		void PlayAlarm(bool intern, String File, bool loop = false);
+		void PlayAlarm(AlarmRef r, bool loop=false);
 
 		void Slaan(int times);
 	}

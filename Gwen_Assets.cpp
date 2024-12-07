@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.04
+// Version: 24.12.07
 // End License
 #include "Gwen_Assets.hpp"
 #include <SlyvStream.hpp>
@@ -30,6 +30,7 @@
 #include <SlyvGINIE.hpp>
 #include "Gwen_GUI.hpp"
 #include <TQSA.hpp>
+#include "Gwen_Schedule.hpp"
 using namespace Slyvina::TQSA;
 using namespace Slyvina::TQSG;
 
@@ -131,6 +132,8 @@ namespace Slyvina {
 			}
 			LastAlarm->ChPlay(2, loop ? -1 : 0);
 		}
+
+		void PlayAlarm(AlarmRef r, bool loop) { PlayAlarm(r.intern, r.File,loop); }
 
 		void Slaan(int times) {
 			if (Res()->EntryExists("Audio/Pixabay_Bell.mp3")) {

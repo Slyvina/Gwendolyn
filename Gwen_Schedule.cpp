@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.07 V
+// Version: 24.12.07 VIII
 // End License
 
 #include "Gwen_Schedule.hpp"
@@ -32,6 +32,7 @@
 #include "Gwen_GUI.hpp"
 #include "Gwen_Assets.hpp"
 #include <SlyvTime.hpp>
+#include <TQSA.hpp>
 using namespace Slyvina::Units;
 using namespace Slyvina::June19;
 
@@ -132,6 +133,21 @@ namespace Slyvina {
 		bool TSchedule::MonthDay(int day) { return _Data->BoolValue(_Record, TrSPrintF("MonthDay_%02d", day)); }
 		void TSchedule::Month(String mn, bool v) { _Data->BoolValue(_Record, "Month_" + mn, v); }
 		bool TSchedule::Month(String mn) { return _Data->BoolValue(_Record, "Motn_" + mn); }
+		bool TSchedule::MonthSet() {
+			for (int i = 1; i <= 12; ++i) if (Month(Months[i])) return true;
+			return false;
+		}
+
+		bool TSchedule::MonthDaySet() {
+			for (int i = 1; i <= 31; ++i) if (MonthDay(i)) return true;
+			return false;
+		}
+
+		bool TSchedule::WeekDaySet() {
+			for (auto wd : WeekDayNames) if (WeekDay(wd)) return true;
+			return false;
+		}
+
 		void TSchedule::Alarm(bool intern, String File) {
 			_Data->BoolValue(_Record, "Alarm_Where", intern);
 			_Data->Value(_Record, "Alarm_File", File);
@@ -448,34 +464,106 @@ namespace Slyvina {
 			}
 		}
 
-		static j19gadget* BarSchedule{ nullptr };
+		static j19gadget
+			* BarSchedule{ nullptr },
+			* BarLabel{ nullptr },
+			* BarSnooze{ nullptr },
+			* BarKill{ nullptr };
 		static TSchedule* Active{ nullptr };
 		void HideScheduleAlarm() {
 			if (BarSchedule) BarSchedule->Visible = false;
+			Active = nullptr;
+			Mix_HaltChannel(2);
 		}
+		static void DrawBarSchedule(j19gadget* g, j19action) {
+			if ((!Active) || (Active->SecAlarmCountDown<=0)) { HideScheduleAlarm(); return; }
+			if (Active->SecAlarmSnooze > 0) {
+				g->SetBackground(0, 100, 0);
+			} else {
+				static int d{ 0 }; d = (d + 1) % 360;
+				static double v{ abs(sin(((double)d * PI) * 180)) };
+				g->SetBackgroundHSV(0, 1, v);
+			}
+			BarLabel->Caption = Active->Label();
+		}
+		static void DrawSnooze(j19gadget* g, j19action) { g->Enabled = Active && Active->SecAlarmSnooze > 0; g->Y(BarKill->Y() - g->H() - 2); }
+		static void DrawKill(j19gadget* g, j19action) {
+			if (!Active) return;
+			g->Caption = Active->Destroy() ? "Terminate and delete" : "Terminate";
+			g->Y(BarSchedule->H() - g->H());				
+			Mix_HaltChannel(2);
+		}
+		static void ActSnooze(j19gadget*, j19action) {
+			if (!Active) return;
+			Active->SecAlarmSnooze = 300;
+		}
+		static void ActKill(j19gadget*, j19action) { 
+			if (!Active) return;
+			if (Active->Destroy()) { TSchedule::Kill(Active->Record()); }
+			HideScheduleAlarm(); 
+		}
+
 
 		static void InitBarSchedule() {
-
+			if (BarSchedule) return;
+			BarSchedule = CreatePanel(1, WorkScreen()->H() - 201, WorkScreen()->W()-2, 200, WorkScreen());
+			BarLabel = CreateLabel("N/A", 5, 5, WorkScreen()->W(), 40, BarSchedule);
+			BarLabel->SetFont(FntRyanna());
+			BarLabel->SetForeground(255, 255, 0);
+			BarSnooze = CreateButton("Snooze", 0, 0, BarSchedule);
+			BarKill = CreateButton("End", 0, 0, BarSchedule);
+			BarSnooze->CBDraw = DrawSnooze;
+			BarKill->CBDraw = DrawKill;
+			BarSnooze->CBAction = ActSnooze;
+			BarKill->CBAction = ActKill;
 		}
 
+		#define BrAct  Active = rec; break
 		void CheckScheduleAlarm() {
 			static auto oldtime{ CurrentTime() };
 			auto newtime(CurrentTime());
-			if (Active) {
-				// TODO: Code!
-				return;
-			}
 			if (newtime == oldtime) return;
+			oldtime = newtime;
+			if (Active) {
+				if (Active->SecAlarmSnooze > 0) {
+					if ((--Active->SecAlarmSnooze) <= 0) PlayAlarm(Active->Alarm(), true);
+				}
+				if (--Active->SecAlarmCountDown <= 0) {
+					HideScheduleAlarm();
+					Active = nullptr;
+					return; // safety pre-caution, in case I may need to add code later that could bump into a null pointer.
+				}
+			}
 			auto H{ CurrentHour() }, M(CurrentMinute()), S{ CurrentSecond() };
 			auto recs{ TSchedule::Records() };
 			for (auto rid : *recs) {
 				auto rec{ TSchedule::GetRecord(rid) };
 				if (!rec->Active()) continue;
 				if (H != rec->Hour() || M != rec->Minute() || S != rec->Second()) continue;
-				if (rec->Repeat() == "Daily") { Active = rec; break; }
+				if (rec->Repeat() == "Daily") { BrAct; }
 				else if (rec->Repeat() == "Weekly") {
-					 if (rec->WeekDay(WeekDay()))  { Active = rec; break; }
+					 if (rec->WeekDay(WeekDay()))  { BrAct; }
 				}
+				else if (rec->Repeat() == "Monthly") { if (rec->MonthDay(CurrentDay())) { BrAct; } }
+				else if (rec->Repeat() == "Annual") { if (rec->MonthDay(CurrentDay()) && rec->Month(CurrentMonthName())) { BrAct; } }
+				else if (rec->Repeat() == "Don't") {
+					auto Ok{ true };
+					if (rec->WeekDaySet()) Ok = rec->WeekDay(WeekDay());
+					if (Ok && rec->MonthDaySet()) Ok = rec->MonthDay(CurrentDay());
+					if (Ok && rec->MonthSet()) Ok = rec->Month(CurrentMonthName());
+					if (Ok) { BrAct; }
+				} else {
+					QCol->Error("Unknown repeat value \"" + rec->Repeat() + "\" in record \"" + rec->Record() + "\".\7");
+				}
+			}
+			if (Active) {
+				InitBarSchedule();
+				Active->SecAlarmCountDown = 60 * 60;
+				Active->SecAlarmSnooze = 0;
+				auto A{ Active->Alarm() };
+				PlayAlarm(A.intern, A.File, true);
+				BarSchedule->Visible = true;
+				if (Active->Repeat() != "Don't") Active->Destroy(false);
 			}
 		}
 	}
