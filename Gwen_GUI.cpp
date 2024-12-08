@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.08
+// Version: 24.12.08 I
 // End License
 
 #include "Gwen_GUI.hpp"
@@ -38,6 +38,7 @@
 #include <SlyvPhantasarTime.hpp>
 #include "Gwen_Schedule.hpp"
 #include "Gwen_Version.hpp"
+#include "Gwen_CountDown.hpp"
 
 
 using namespace Slyvina;
@@ -329,6 +330,7 @@ namespace Slyvina {
 			auto CntBack{ CreateButton("Back",0,0,CntPanel) };
 			CntBack->CBDraw = DrwBack;
 			CntBack->CBAction = ActBack;
+			InitCountDown(CntPanel);
 
 			// Must be last!
 			TSchedule::RefreshScheduleList();

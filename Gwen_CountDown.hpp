@@ -22,12 +22,31 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.08
+// Version: 24.12.08 I
 // End License
+
 #pragma once
+#include <june19.hpp>
+#include <SlyvGINIE.hpp>
 
 namespace Slyvina {
 	namespace Gwendolyn {
-		void InitCountDown();
+
+		class TCountDown {
+		private:
+			static Units::GINIE _Data;
+			static std::map<int, TCountDown> _Reg;
+			int _ID{ 0 };
+			String V(String Key);
+			void V(String Key, String Value);
+			static void _Load();
+		public:
+			static void ReIndex();
+			String Record();
+			String Label(bool actual = false);
+			
+		};
+
+		void InitCountDown(June19::j19gadget* CntBack);
 	}
 }
