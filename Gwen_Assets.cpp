@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.10 I
+// Version: 24.12.10 II
 // End License
 #include "Gwen_Assets.hpp"
 #include <SlyvStream.hpp>
@@ -53,14 +53,14 @@ namespace Slyvina {
 			if (_ResFile.size()) return _ResFile;
 			static String Candidates[2]{
 #ifndef SlyvWindows
-				"/self/proc/exe",
+				"/proc/self/exe",
 #else
 				A0,
 #endif
 				StripExt(A0) + ".jcr" // In Windows all safe, in Linux and other Unix based systems, this option should only be used for debugging.
 			};
 			for (auto& rf : Candidates) {
-				QCol->LMagenta(rf + "\t"+ JCR6_Recognize(rf) +"\n"); // Debug
+				//QCol->LMagenta(rf + "\t"+ JCR6_Recognize(rf) +"\n"); // Debug
 				if (JCR6_Recognize(rf)!="NONE") { _ResFile = rf; return rf; }
 			}
 			QCol->Error("No resource present!"); exit(1);
