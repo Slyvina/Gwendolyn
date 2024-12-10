@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.10
+// Version: 24.12.10 I
 // End License
 
 #include "Gwen_CountDown.hpp"
@@ -31,6 +31,7 @@
 #include <SlyvQCol.hpp>
 #include <SlyvTime.hpp>
 #include <TQSA.hpp>
+using namespace Slyvina::TQSE;
 using namespace Slyvina::TQSA;
 
 using namespace Slyvina::Units;
@@ -171,6 +172,16 @@ namespace Slyvina {
 			edsecond->Text = std::to_string(r->DSeconds());
 		}
 
+		static void ActRemove(j19gadget* g, j19action) {
+			auto r{ TCountDown::Selected() };
+			if (!r) return;
+			if (Yes(TrSPrintF("Do you really wish to remove coundown record #%d?\n\n\"", r->ID()) + r->Label() + "\"")) {
+				QCol->Doing("Deleting", r->ID());
+				TCountDown::Kill(r->ID());
+				return; // Safety precaution!
+			}
+		}
+
 		void InitCountDown(j19gadget* CntBack) {
 			ListCountDown = CreateListBox(5, 5, 500, CntBack->H() - 175, CntBack);
 			ListCountDown->CBDraw = DrawLBCD;
@@ -184,6 +195,7 @@ namespace Slyvina {
 			RemButton = CreateButton("Remove", 0, DatPanel->DrawY() + DatPanel->H() - 100 + 3, DatPanel);
 			RemButton->SetFont(FntRyanna());
 			RemButton->CBDraw = DrawRemButton;
+			RemButton->CBAction = ActRemove;
 			RemButton->SetBackgroundHSV(0, 1, .5);
 			RemButton->SetForegroundHSV(0, 1, 1);
 			auto CurLabel{ CreateLabel("--",0,10,DatPanel->W(),60,DatPanel,2) };
@@ -251,6 +263,14 @@ namespace Slyvina {
 				}
 			}
 			ot = nt;
+		}
+
+		void TCountDown::Kill(int id) {
+			_Load();
+			QCol->Doing("Removing", id);
+			_Data->Kill(TrSPrintF("REC::%09d", id));
+			QCol->Doing("Reindexing", "CountDown database");
+			ReIndex();
 		}
 
 		String TCountDown::V(String Key) { return _Data->Value("REC::" + Record(), Key); }

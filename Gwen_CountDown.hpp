@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.10
+// Version: 24.12.10 I
 // End License
 
 #pragma once
@@ -50,6 +50,7 @@ namespace Slyvina {
 			static TCountDown* Create();
 			static TCountDown* Get(int ID);
 			static TCountDown* Selected();
+			inline int ID() { return _ID; }
 			static bool hasID(int);
 			String Record();
 			String Label(bool actual = false);
@@ -62,6 +63,7 @@ namespace Slyvina {
 			void DMinutes(int v);
 			void DSeconds(int v);			
 			static void CheckCountDown();
+			static void Kill(int id);
 		};
 
 		void InitCountDown(June19::j19gadget* CntBack);
