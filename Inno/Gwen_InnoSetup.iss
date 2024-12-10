@@ -22,12 +22,12 @@
 ; 	Please note that some references to data like pictures or audio, do not automatically
 ; 	fall under this licenses. Mostly this is noted in the respective files.
 ; 
-; Version: 24.12.04
+; Version: 24.12.10
 ; End License
 
 
 #define MyAppName "Gwendolyn"
-#define MyAppVersion "Alpha"
+#define MyAppVersion "1.0.0 (Beta)"
 #define MyAppPublisher "Jeroen P. Broks"
 #define MyAppURL "https://github.com/Slyvina/Gwendolyn"
 #define MyAppExeName "Gwendolyn.exe"
