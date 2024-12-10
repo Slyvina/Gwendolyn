@@ -22,8 +22,10 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.11.30 I
+// Version: 24.12.10
 // End License
+
+#include <math.h>
 #include <SlyvTime.hpp>
 #include "Gwen_Clock.hpp"
 #include <SlyvSTOI.hpp>
