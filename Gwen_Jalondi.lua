@@ -22,7 +22,7 @@
 -- 	Please note that some references to data like pictures or audio, do not automatically
 -- 	fall under this licenses. Mostly this is noted in the respective files.
 -- 
--- Version: 24.12.10
+-- Version: 24.12.10 I
 -- End License
 SDL2Dir = "../../Libs/TQSL/SDL2/"
 
@@ -69,4 +69,4 @@ for _,a in pairs(XAssets) do
 	end
 end
 Jalondi.Add("../../../../3rd Party Assets/Sound Effects/Pixabay/School Bell Short.ogg","Audio/Tring.mp3","zlib")
-Jalondi.Start("Exe/Windows/Gwendolyn.jcr")
+Jalondi.Start("Exe/"..Jalondi.Platform.."/Gwendolyn.jcr")
