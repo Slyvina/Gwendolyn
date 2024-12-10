@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.08 I
+// Version: 24.12.10
 // End License
 #pragma once
 #include <string>
@@ -48,7 +48,7 @@ namespace Slyvina {
 			}
 		};
 
-		static QVersionClass QVersion{0,0,0,"20241208000705","WIP/In development"};
+		static QVersionClass QVersion{1,0,0,"20241210215741","Beta"};
 
 	} // namespace Gwendolyn
 } // namespace Slyvina
