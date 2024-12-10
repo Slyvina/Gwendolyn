@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.08 I
+// Version: 24.12.10
 // End License
 
 #include "Gwen_GUI.hpp"
@@ -343,6 +343,7 @@ namespace Slyvina {
 				if (AppTerminate()) return;
 				Screen()->Draw();
 				CheckScheduleAlarm();
+				TCountDown::CheckCountDown();
 				Flip();
 			}
 		}

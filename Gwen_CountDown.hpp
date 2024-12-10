@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.08 I
+// Version: 24.12.10
 // End License
 
 #pragma once
@@ -39,12 +39,29 @@ namespace Slyvina {
 			int _ID{ 0 };
 			String V(String Key);
 			void V(String Key, String Value);
+			int I(String Key);
+			void I(String key, int Value);
 			static void _Load();
 		public:
+			int hours{ 0 }, minutes{ 0 }, seconds{ 0 };
+			bool running{ false }, paused{ false };
+			TCountDown();
 			static void ReIndex();
+			static TCountDown* Create();
+			static TCountDown* Get(int ID);
+			static TCountDown* Selected();
+			static bool hasID(int);
 			String Record();
 			String Label(bool actual = false);
-			
+			String RunTime();
+			void Label(String nv);
+			int DHours();
+			int DMinutes();
+			int DSeconds();
+			void DHours(int v);
+			void DMinutes(int v);
+			void DSeconds(int v);			
+			static void CheckCountDown();
 		};
 
 		void InitCountDown(June19::j19gadget* CntBack);

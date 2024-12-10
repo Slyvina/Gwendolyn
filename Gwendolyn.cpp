@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.08
+// Version: 24.12.10
 // End License
 
 #include <JCR6_zlib.hpp>
@@ -46,4 +46,5 @@ int main(int ca, char** args) {
 	Gwen_Run();
 	Gwen_Done();
 	QCol->Reset();
+	return 0;
 }

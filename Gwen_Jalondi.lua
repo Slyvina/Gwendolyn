@@ -22,7 +22,7 @@
 -- 	Please note that some references to data like pictures or audio, do not automatically
 -- 	fall under this licenses. Mostly this is noted in the respective files.
 -- 
--- Version: 24.12.04 I
+-- Version: 24.12.10
 -- End License
 SDL2Dir = "../../Libs/TQSL/SDL2/"
 
@@ -57,7 +57,7 @@ XAssets = {
 	{"Sound Effects/Pixabay/stab-f-01-brvhrtz-224599.mp3","Stab.mp3"},
 	{"Sound Effects/Pixabay/ascent-braam-magma-brass-d-cinematic-trailer-sound-effect-222269.mp3","Braam.mp3"},
 	{"Sound Effects/Pixabay/labyrinth-for-the-brain-190096.mp3","Labyrinth for the brain.mp3"},
-	{"Sound Effects/Pixabay/ambient-piano-logo-165357.mp3","Ambient Piano Logo.mp3"}
+	{"Sound Effects/Pixabay/ambient-piano-logo-165357.mp3","Ambient Piano Logo.mp3"}	
 }
 for _,a in pairs(XAssets) do
 	local fa="../../../../3rd Party Assets/"..a[1]
@@ -68,5 +68,5 @@ for _,a in pairs(XAssets) do
 		print("\x1b[91mError: \x1b[96mFile not found: \x1b[0m"..fa)
 	end
 end
-
+Jalondi.Add("../../../../3rd Party Assets/Sound Effects/Pixabay/School Bell Short.ogg","Audio/Tring.mp3","zlib")
 Jalondi.Start("Exe/Windows/Gwendolyn.jcr")
