@@ -22,7 +22,7 @@
 ; 	Please note that some references to data like pictures or audio, do not automatically
 ; 	fall under this licenses. Mostly this is noted in the respective files.
 ; 
-; Version: 24.12.10
+; Version: 24.12.11
 ; End License
 
 
@@ -43,7 +43,7 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DisableProgramGroupPage=yes
-OutputDir=E:\Projects\Applications\Slyvina\Apps\Gwendolyn\Exe\New folder
+OutputDir=E:\Projects\Applications\Slyvina\Apps\Gwendolyn\Exe\Windows_Installer
 OutputBaseFilename=Gwendolyn_Setup
 SetupIconFile=E:\Projects\Applications\Slyvina\Apps\Gwendolyn\Icon\Gwendolyn.ico
 Compression=lzma
