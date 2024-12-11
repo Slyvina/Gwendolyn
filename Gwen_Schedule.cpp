@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.07 XVI
+// Version: 24.12.11
 // End License
 
 #include "Gwen_Schedule.hpp"
@@ -33,6 +33,7 @@
 #include "Gwen_Assets.hpp"
 #include <SlyvTime.hpp>
 #include <TQSA.hpp>
+#include <SlyvRequestFile.hpp>
 using namespace Slyvina::Units;
 using namespace Slyvina::June19;
 
@@ -309,8 +310,19 @@ namespace Slyvina {
 			Rec->Active(ChkActive->checked);
 			GoToPanel("Schedule");
 		}
-
-
+		static void ActExtAlarmButton(j19gadget*, j19action) {
+#ifdef SlyvLinux
+			Notify("This feature is not (yet) available in Linux!");
+#else
+			QCol->Doing("Requesting", "Alarm file");
+			auto reg{ RequestFile("Please select an alarm jingle:",CurrentDir()) };
+			auto err{ RequestFileError() };
+			if (err.size())
+				QCol->Error("\7RequestFile Error -- " + err);
+			if (reg.size())
+				ExtAlarmFld->Text = reg;
+#endif
+		}
 
 
 #define schLabField(var,desc) var = CreateLabel("",252,y,ret->W()-300,16,ret); var->SetForeground(255,255,255,255); CreateLabel(desc,2,y,250,16,ret); y+=16;
@@ -391,6 +403,7 @@ namespace Slyvina {
 			ExtAlarmButton->SetFont(FntMini());
 			ExtAlarmButton->SetForeground(250, 180, 0);
 			ExtAlarmButton->SetBackground(25, 18, 0);
+			ExtAlarmButton->CBAction = ActExtAlarmButton;
 			Alarm->CBDraw = AlarmShow;
 			IntAlarmList->CBDraw = DrwHueGadget;
 			auto Preview{ CreateButton("Play",IntAlarmList->DrawX() + IntAlarmList->W() + 75,y,ret) };
