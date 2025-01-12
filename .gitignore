@@ -11,3 +11,8 @@ Assets/Audio/Pixabay_Bell.mp3
 /enc_temp_folder
 /Assets/GFX/Panel
 itchwin.ps1
+
+
+bin
+obj
+*.depend
