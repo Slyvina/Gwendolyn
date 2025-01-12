@@ -93,6 +93,16 @@
 		<Unit filename="../../Libs/JCR6/3rdParty/zlib/src/zutil.h" />
 		<Unit filename="../../Libs/JCR6/Source/JCR6_Core.cpp" />
 		<Unit filename="../../Libs/JCR6/Source/JCR6_zlib.cpp" />
+		<Unit filename="../../Libs/June19/src/june19_button.cpp" />
+		<Unit filename="../../Libs/June19/src/june19_checkbox.cpp" />
+		<Unit filename="../../Libs/June19/src/june19_core.cpp" />
+		<Unit filename="../../Libs/June19/src/june19_label.cpp" />
+		<Unit filename="../../Libs/June19/src/june19_listbox.cpp" />
+		<Unit filename="../../Libs/June19/src/june19_picture.cpp" />
+		<Unit filename="../../Libs/June19/src/june19_radio.cpp" />
+		<Unit filename="../../Libs/June19/src/june19_scrollbar.cpp" />
+		<Unit filename="../../Libs/June19/src/june19_tabber.cpp" />
+		<Unit filename="../../Libs/June19/src/june19_textfield.cpp" />
 		<Unit filename="../../Libs/TQSL/Source/TQSA.cpp" />
 		<Unit filename="../../Libs/TQSL/Source/TQSE.cpp" />
 		<Unit filename="../../Libs/TQSL/Source/TQSG.cpp" />
@@ -101,6 +111,7 @@
 		<Unit filename="../../Libs/Units/Source/SlyvDirry.cpp" />
 		<Unit filename="../../Libs/Units/Source/SlyvPhantasarTime.cpp" />
 		<Unit filename="../../Libs/Units/Source/SlyvQCol.cpp" />
+		<Unit filename="../../Libs/Units/Source/SlyvRoman.cpp" />
 		<Unit filename="../../Libs/Units/Source/SlyvSTOI.cpp" />
 		<Unit filename="../../Libs/Units/Source/SlyvStream.cpp" />
 		<Unit filename="../../Libs/Units/Source/SlyvString.cpp" />
@@ -121,7 +132,11 @@
 		<Unit filename="Gwen_Schedule.hpp" />
 		<Unit filename="Gwen_Version.hpp" />
 		<Unit filename="Gwendolyn.cpp" />
-		<Unit filename="main.cpp" />
-		<Extensions />
+		<Extensions>
+			<lib_finder>
+				<lib name="SDL2_image" />
+				<lib name="SDL2_mixer" />
+			</lib_finder>
+		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
