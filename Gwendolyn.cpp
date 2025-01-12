@@ -5,7 +5,7 @@
 // 
 // 
 // 
-// 	(c) Jeroen P. Broks, 2024
+// 	(c) Jeroen P. Broks, 2024, 2025
 // 
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.10
+// Version: 25.01.12
 // End License
 
 #include <JCR6_zlib.hpp>
@@ -39,6 +39,7 @@ using namespace Slyvina::Gwendolyn;
 int main(int ca, char** args) {
 	JCR_InitZlib();
 	QCol->LMagenta("Gwendolyn\n");
+	QCol->Doing("Platform",Platform(false));
 	QCol->Doing("Version", QVersion.Version());
 	QCol->Doing("Coded by", "Jeroen P. Broks");
 	CheckAssets(args[0]);

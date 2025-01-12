@@ -5,7 +5,7 @@
 // 
 // 
 // 
-// 	(c) Jeroen P. Broks, 2024
+// 	(c) Jeroen P. Broks, 2024, 2025
 // 
 // 		This program is free software: you can redistribute it and/or modify
 // 		it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 // 	Please note that some references to data like pictures or audio, do not automatically
 // 	fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 24.12.11
+// Version: 25.01.12
 // End License
 
 #include "Gwen_Schedule.hpp"
@@ -204,7 +204,7 @@ namespace Slyvina {
 		static j19gadget* WeekDayCheck[7];
 		static j19gadget* MonthDayCheck[32]; // By exception starting at 1 and ignoring 0. For month and month days that'll work handier.
 		static j19gadget* MonthCheck[13];
-		
+
 
 		static void TmCorrect(j19gadget*, j19action) {
 			int
@@ -234,7 +234,7 @@ namespace Slyvina {
 			g->Caption = g->checked ? "Yes" : "No";
 		}
 		static void DrwHueGadget(j19gadget* g, j19action) {
-			static int Hue{ 0 }; 
+			static int Hue{ 0 };
 			/*
 			if (gRepeat["Weekly"]->checked) {
 				g->Enabled = true;
@@ -299,7 +299,7 @@ namespace Slyvina {
 			Rec->Minute(ToInt(TimMn->Text));
 			Rec->Second(ToInt(TimSc->Text));
 			String Rep{ "Don't" };
-			for (auto gt : gRepeat) { 
+			for (auto gt : gRepeat) {
 				auto g{ gt.second };
 				if (g->checked) Rep = g->Caption;
 			}
@@ -312,7 +312,7 @@ namespace Slyvina {
 		}
 		static void ActExtAlarmButton(j19gadget*, j19action) {
 #ifdef SlyvLinux
-			Notify("This feature is not (yet) available in Linux!");
+			Slyvina::TQSE::Notify("This feature is not (yet) available in Linux!");
 #else
 			QCol->Doing("Requesting", "Alarm file");
 			auto reg{ RequestFile("Please select an alarm jingle:",CurrentDir()) };
@@ -345,7 +345,7 @@ namespace Slyvina {
 			TimMn->SetBackground(0, 18, 25);
 			TimSc->SetBackground(0, 18, 25);
 			TimHr->CBDraw = TmCorrect;
-			CreateLabel("Repeat:", 2, y, 250, 16, ret);			
+			CreateLabel("Repeat:", 2, y, 250, 16, ret);
 			for (auto& R : _mRepeat) {
 				gRepeat[R.second] = CreateRadioButton(R.second, 252, y, 200, 16, ret); y += 16;
 				gRepeat[R.second]->CBDraw = RepCol;
@@ -361,7 +361,7 @@ namespace Slyvina {
 			LstWeekDay->AddItem("Thursday");
 			LstWeekDay->AddItem("Friday");
 			LstWeekDay->AddItem("Saturday");
-			LstWeekDay->CBDraw = DrwWeek; 
+			LstWeekDay->CBDraw = DrwWeek;
 			y += 50;
 			*/
 			for (int wi = 0; wi < 7; wi++) {
@@ -385,7 +385,7 @@ namespace Slyvina {
 				auto mdw{ FntMini()->Width(mnt) + 25 };
 				if (mdx + mdw > ret->W() - 20) { mdx = 252; y += FntMini()->Height("The quick brown fox jumps over the lazy dog") + 3; }
 				MonthCheck[i] = CreateCheckBox(mnt, mdx, y, 0, 0, ret);
-				mdx += mdw; 
+				mdx += mdw;
 				MonthCheck[i]->SetFont(FntMini());
 				MonthCheck[i]->CBDraw = DrawMonthDay;
 			}
@@ -504,18 +504,18 @@ namespace Slyvina {
 		static void DrawKill(j19gadget* g, j19action) {
 			if (!Active) return;
 			g->Caption = Active->Destroy() ? "Terminate and delete" : "Terminate";
-			g->Y(BarSchedule->H() - g->H());				
+			g->Y(BarSchedule->H() - g->H());
 		}
 		static void ActSnooze(j19gadget*, j19action) {
 			if (!Active) return;
 			Active->SecAlarmSnooze = 300;
 			Mix_HaltChannel(2);
 		}
-		static void ActKill(j19gadget*, j19action) { 
+		static void ActKill(j19gadget*, j19action) {
 			if (!Active) return;
 			if (Active->Repeat() == "Don't") Active->Active(false);
 			if (Active->Destroy()) { TSchedule::Kill(Active->Record()); }
-			HideScheduleAlarm(); 
+			HideScheduleAlarm();
 		}
 
 
@@ -544,7 +544,7 @@ namespace Slyvina {
 			if (Active) {
 				if (Active->SecAlarmSnooze > 0) {
 					if ((--Active->SecAlarmSnooze) <= 0) PlayAlarm(Active->Alarm(), true);
-					//QCol->Doing("Debug", TrSPrintF("Snooze seconds left: %03d", Active->SecAlarmSnooze)); 
+					//QCol->Doing("Debug", TrSPrintF("Snooze seconds left: %03d", Active->SecAlarmSnooze));
 				}
 				if (--Active->SecAlarmCountDown <= 0) {
 					HideScheduleAlarm();
